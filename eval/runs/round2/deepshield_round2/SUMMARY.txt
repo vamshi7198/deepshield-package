@@ -1,0 +1,47 @@
+DEEPSHIELD VERIFICATION — PLAIN-ENGLISH SUMMARY
+(runtime 1.8 h)
+
+Clean test set (3635 genuine, 3013 fake, no recording shared with training):
+  accuracy 93.2%, EER 6.8%
+  genuine audio wrongly flagged fake: 7.0%
+  fake audio wrongly passed as genuine: 6.5%
+
+Original-style random split gives 95.8% (28.0% of its validation clips had the same recording in training) vs 93.2% on the clean test.
+
+In-the-Wild real-world test (2000 genuine, 2000 fake, never trained on):
+  accuracy 73.4%, EER 25.8%, genuine flagged fake 18.1%, fakes passed 35.2%
+    spoof head only (threshold 0.5)    fakes auto-passed 35.2% | genuine to review 0.0% | genuine auto-blocked 18.1%
+    + confidence bands (0.3 / 0.7)     fakes auto-passed 33.1% | genuine to review 3.4% | genuine auto-blocked 16.8%
+    + uncertainty                      fakes auto-passed 3.1% | genuine to review 78.7% | genuine auto-blocked 1.0%
+    + novelty (full gateway)           fakes auto-passed 1.7% | genuine to review 80.5% | genuine auto-blocked 0.9%
+    full gateway, calibrated           fakes auto-passed 16.4% | genuine to review 27.5% | genuine auto-blocked 9.7%
+
+Gateway on clean test (calibrated uncertainty threshold 0.445):
+    spoof head only (threshold 0.5)    fakes auto-passed 6.5% | genuine to review 0.0% | genuine auto-blocked 7.0%
+    + confidence bands (0.3 / 0.7)     fakes auto-passed 6.1% | genuine to review 1.0% | genuine auto-blocked 6.6%
+    + uncertainty                      fakes auto-passed 0.3% | genuine to review 52.9% | genuine auto-blocked 0.7%
+    + novelty (full gateway)           fakes auto-passed 0.3% | genuine to review 54.2% | genuine auto-blocked 0.5%
+    full gateway, calibrated           fakes auto-passed 2.8% | genuine to review 13.8% | genuine auto-blocked 3.8%
+
+Unseen generators (model never trained on them):
+  tts_2026               EER seen 6.9% -> unseen 11.4%; unseen fakes passed as genuine 20.1%; flagged novel 30.8%
+  modern_tts             EER seen 10.1% -> unseen 25.8%; unseen fakes passed as genuine 65.2%; flagged novel 9.4%
+  mlaad_tts              EER seen 7.5% -> unseen 18.4%; unseen fakes passed as genuine 41.3%; flagged novel 12.9%
+  for_tts                EER seen 11.1% -> unseen 40.5%; unseen fakes passed as genuine 66.5%; flagged novel 14.3%
+  conformer_fastspeech2  EER seen 7.1% -> unseen 10.4%; unseen fakes passed as genuine 19.8%; flagged novel 0.4%
+  melgan_family          EER seen 7.9% -> unseen 14.7%; unseen fakes passed as genuine 34.7%; flagged novel 7.7%
+  hifigan                EER seen 7.1% -> unseen 10.5%; unseen fakes passed as genuine 13.8%; flagged novel 0.0%
+  waveglow               EER seen 11.9% -> unseen 9.4%; unseen fakes passed as genuine 5.3%; flagged novel 0.0%
+  parallel_wavegan       EER seen 7.0% -> unseen 8.2%; unseen fakes passed as genuine 7.4%; flagged novel 23.8%
+
+Risk gateway on unseen generators (mean over held-out families):
+  spoof head only (threshold 0.5)    fakes auto-passed 30.5% | genuine sent to review 0.0% | genuine auto-blocked 8.4%
+  + confidence bands (0.3 / 0.7)     fakes auto-passed 25.1% | genuine sent to review 5.7% | genuine auto-blocked 6.1%
+  + uncertainty                      fakes auto-passed 9.7% | genuine sent to review 44.6% | genuine auto-blocked 0.8%
+  + novelty (full gateway)           fakes auto-passed 9.1% | genuine sent to review 46.1% | genuine auto-blocked 0.6%
+  full gateway, calibrated           fakes auto-passed 19.3% | genuine sent to review 14.4% | genuine auto-blocked 3.8%
+
+Uncertainty: wrong predictions average 0.373 vs 0.173 for correct ones (AUC for spotting errors 0.81; 0.5 = no better than chance).
+Attack-type attribution accuracy on test fakes: 91.0%
+
+Robustness (EER): clean 7.4%, mp3_32kbps 9.0%, mp3_128kbps 7.5%, noise_0dB 21.2%, noise_10dB 19.1%, noise_20dB 13.6%, reverb 11.8%, telephone_8kHz 10.6%

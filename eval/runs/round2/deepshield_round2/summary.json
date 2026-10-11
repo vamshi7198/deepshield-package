@@ -1,0 +1,437 @@
+{
+  "runtime_hours": 1.84,
+  "pool": {
+    "n": 40000,
+    "failed_extraction": 2,
+    "ljspeech_real_included": true,
+    "splits": {
+      "test": 6648,
+      "train": 27363,
+      "val": 5989
+    }
+  },
+  "main_test": {
+    "n_real": 3635,
+    "n_fake": 3013,
+    "accuracy": 0.9321600481347774,
+    "auc": 0.9775370460238553,
+    "eer": 0.0682979897747085,
+    "false_positive_rate": 0.07015130674002751,
+    "false_negative_rate": 0.06505144374377692
+  },
+  "naive_vs_clean": {
+    "naive_random_split_accuracy": 0.9578333333333333,
+    "share_of_naive_val_with_same_recording_in_train": 0.2795,
+    "group_clean_test_accuracy": 0.9321600481347774
+  },
+  "uncertainty": {
+    "mean_uncertainty_correct": 0.17285454273223877,
+    "mean_uncertainty_wrong": 0.3732331395149231,
+    "auc_uncertainty_flags_errors": 0.8124165652001702,
+    "share_of_clips_with_nonzero_uncertainty": 0.8695848375451264
+  },
+  "attack_attribution_accuracy": 0.9103883172917359,
+  "logo": [
+    {
+      "held_out": "tts_2026",
+      "n_unseen_fakes": 159,
+      "calibrated_unc_threshold": 0.37273129686713224,
+      "seen_auc": 0.9788630161284962,
+      "seen_eer": 0.06906100335431165,
+      "seen_false_negative_rate": 0.08166042871725077,
+      "seen_false_positive_rate": 0.05969738651994498,
+      "seen_novelty_auc_fake_vs_real": 0.7970405114915711,
+      "seen_fakes_flagged_novel": 0.2558693433140524,
+      "seen_genuine_flagged_novel": 0.03328748280605227,
+      "seen_mean_uncertainty_fakes": 0.22924821078777313,
+      "seen_mean_uncertainty_genuine": 0.13854694366455078,
+      "unseen_auc": 0.9473454274912841,
+      "unseen_eer": 0.11396278321351638,
+      "unseen_false_negative_rate": 0.20125786163522008,
+      "unseen_false_positive_rate": 0.05969738651994498,
+      "unseen_novelty_auc_fake_vs_real": 0.8586731030425717,
+      "unseen_fakes_flagged_novel": 0.3081761006289308,
+      "unseen_genuine_flagged_novel": 0.03328748280605227,
+      "unseen_mean_uncertainty_fakes": 0.26505154371261597,
+      "unseen_mean_uncertainty_genuine": 0.13619843125343323
+    },
+    {
+      "held_out": "modern_tts",
+      "n_unseen_fakes": 658,
+      "calibrated_unc_threshold": 0.28508736178278926,
+      "seen_auc": 0.9658658882326774,
+      "seen_eer": 0.10064194154775255,
+      "seen_false_negative_rate": 0.15052160953800298,
+      "seen_false_positive_rate": 0.06217331499312242,
+      "seen_novelty_auc_fake_vs_real": 0.7528471742477201,
+      "seen_fakes_flagged_novel": 0.1769746646795827,
+      "seen_genuine_flagged_novel": 0.030536451169188447,
+      "seen_mean_uncertainty_fakes": 0.20232903957366943,
+      "seen_mean_uncertainty_genuine": 0.0958416685461998,
+      "unseen_auc": 0.8294310214354699,
+      "unseen_eer": 0.25806516349406106,
+      "unseen_false_negative_rate": 0.6519756838905775,
+      "unseen_false_positive_rate": 0.06217331499312242,
+      "unseen_novelty_auc_fake_vs_real": 0.7774055848450769,
+      "unseen_fakes_flagged_novel": 0.09422492401215805,
+      "unseen_genuine_flagged_novel": 0.030536451169188447,
+      "unseen_mean_uncertainty_fakes": 0.19752280414104462,
+      "unseen_mean_uncertainty_genuine": 0.09463520348072052
+    },
+    {
+      "held_out": "mlaad_tts",
+      "n_unseen_fakes": 1730,
+      "calibrated_unc_threshold": 0.2687745779752732,
+      "seen_auc": 0.976805695009515,
+      "seen_eer": 0.07542940534252152,
+      "seen_false_negative_rate": 0.10736052508204408,
+      "seen_false_positive_rate": 0.04951856946354883,
+      "seen_novelty_auc_fake_vs_real": 0.74617096507299,
+      "seen_fakes_flagged_novel": 0.16221284575714956,
+      "seen_genuine_flagged_novel": 0.025584594222833563,
+      "seen_mean_uncertainty_fakes": 0.17094780504703522,
+      "seen_mean_uncertainty_genuine": 0.09447982162237167,
+      "unseen_auc": 0.9018924871393246,
+      "unseen_eer": 0.18392952270396196,
+      "unseen_false_negative_rate": 0.41329479768786126,
+      "unseen_false_positive_rate": 0.04951856946354883,
+      "unseen_novelty_auc_fake_vs_real": 0.762752303790222,
+      "unseen_fakes_flagged_novel": 0.12947976878612716,
+      "unseen_genuine_flagged_novel": 0.025584594222833563,
+      "unseen_mean_uncertainty_fakes": 0.20665469765663147,
+      "unseen_mean_uncertainty_genuine": 0.09434843808412552
+    },
+    {
+      "held_out": "for_tts",
+      "n_unseen_fakes": 1567,
+      "calibrated_unc_threshold": 0.3284311175346375,
+      "seen_auc": 0.9510882104982917,
+      "seen_eer": 0.11062727711960084,
+      "seen_false_negative_rate": 0.09318996415770608,
+      "seen_false_positive_rate": 0.12434662998624484,
+      "seen_novelty_auc_fake_vs_real": 0.7747617498138862,
+      "seen_fakes_flagged_novel": 0.22087813620071683,
+      "seen_genuine_flagged_novel": 0.031361760660247595,
+      "seen_mean_uncertainty_fakes": 0.1895836442708969,
+      "seen_mean_uncertainty_genuine": 0.11774688959121704,
+      "unseen_auc": 0.6190820121680921,
+      "unseen_eer": 0.4053674962188677,
+      "unseen_false_negative_rate": 0.6649649010848755,
+      "unseen_false_positive_rate": 0.12434662998624484,
+      "unseen_novelty_auc_fake_vs_real": 0.7422961019444194,
+      "unseen_fakes_flagged_novel": 0.1429483088704531,
+      "unseen_genuine_flagged_novel": 0.031361760660247595,
+      "unseen_mean_uncertainty_fakes": 0.14738701283931732,
+      "unseen_mean_uncertainty_genuine": 0.11853905767202377
+    },
+    {
+      "held_out": "conformer_fastspeech2",
+      "n_unseen_fakes": 454,
+      "calibrated_unc_threshold": 0.38588121704757217,
+      "seen_auc": 0.9781834989486001,
+      "seen_eer": 0.07059395207829375,
+      "seen_false_negative_rate": 0.06681034482758619,
+      "seen_false_positive_rate": 0.07125171939477304,
+      "seen_novelty_auc_fake_vs_real": 0.7655913532229758,
+      "seen_fakes_flagged_novel": 0.20150862068965517,
+      "seen_genuine_flagged_novel": 0.030811554332874826,
+      "seen_mean_uncertainty_fakes": 0.19890181720256805,
+      "seen_mean_uncertainty_genuine": 0.1832561194896698,
+      "unseen_auc": 0.9535584654818244,
+      "unseen_eer": 0.10444437038338718,
+      "unseen_false_negative_rate": 0.19823788546255505,
+      "unseen_false_positive_rate": 0.07125171939477304,
+      "unseen_novelty_auc_fake_vs_real": 0.7274369959219288,
+      "unseen_fakes_flagged_novel": 0.004405286343612335,
+      "unseen_genuine_flagged_novel": 0.030811554332874826,
+      "unseen_mean_uncertainty_fakes": 0.32986947894096375,
+      "unseen_mean_uncertainty_genuine": 0.1852557361125946
+    },
+    {
+      "held_out": "melgan_family",
+      "n_unseen_fakes": 795,
+      "calibrated_unc_threshold": 0.398431835770607,
+      "seen_auc": 0.9725503527701214,
+      "seen_eer": 0.0791585818065805,
+      "seen_false_negative_rate": 0.07642585551330794,
+      "seen_false_positive_rate": 0.08088033012379642,
+      "seen_novelty_auc_fake_vs_real": 0.8068947338141537,
+      "seen_fakes_flagged_novel": 0.232319391634981,
+      "seen_genuine_flagged_novel": 0.03108665749656121,
+      "seen_mean_uncertainty_fakes": 0.2157927006483078,
+      "seen_mean_uncertainty_genuine": 0.1907084882259369,
+      "unseen_auc": 0.9161987317571133,
+      "unseen_eer": 0.14662479561911185,
+      "unseen_false_negative_rate": 0.34716981132075475,
+      "unseen_false_positive_rate": 0.08088033012379642,
+      "unseen_novelty_auc_fake_vs_real": 0.48151843104686265,
+      "unseen_fakes_flagged_novel": 0.07672955974842767,
+      "unseen_genuine_flagged_novel": 0.03108665749656121,
+      "unseen_mean_uncertainty_fakes": 0.362605482339859,
+      "unseen_mean_uncertainty_genuine": 0.1922561079263687
+    },
+    {
+      "held_out": "hifigan",
+      "n_unseen_fakes": 188,
+      "calibrated_unc_threshold": 0.3986823130398989,
+      "seen_auc": 0.9784773736893837,
+      "seen_eer": 0.0708209520314344,
+      "seen_false_negative_rate": 0.04998276456394346,
+      "seen_false_positive_rate": 0.09463548830811554,
+      "seen_novelty_auc_fake_vs_real": 0.780761365312061,
+      "seen_fakes_flagged_novel": 0.23198896932092383,
+      "seen_genuine_flagged_novel": 0.03466299862448418,
+      "seen_mean_uncertainty_fakes": 0.1776934564113617,
+      "seen_mean_uncertainty_genuine": 0.2045890986919403,
+      "unseen_auc": 0.9402909069624513,
+      "unseen_eer": 0.10532353888027161,
+      "unseen_false_negative_rate": 0.13829787234042556,
+      "unseen_false_positive_rate": 0.09463548830811554,
+      "unseen_novelty_auc_fake_vs_real": 0.4169422576019199,
+      "unseen_fakes_flagged_novel": 0.0,
+      "unseen_genuine_flagged_novel": 0.03466299862448418,
+      "unseen_mean_uncertainty_fakes": 0.3532858192920685,
+      "unseen_mean_uncertainty_genuine": 0.2066054344177246
+    },
+    {
+      "held_out": "waveglow",
+      "n_unseen_fakes": 190,
+      "calibrated_unc_threshold": 0.36195123195648193,
+      "seen_auc": 0.9525351076421099,
+      "seen_eer": 0.11889636024589934,
+      "seen_false_negative_rate": 0.11764705882352944,
+      "seen_false_positive_rate": 0.11994497936726273,
+      "seen_novelty_auc_fake_vs_real": 0.7767686480241307,
+      "seen_fakes_flagged_novel": 0.17373461012311903,
+      "seen_genuine_flagged_novel": 0.021182943603851444,
+      "seen_mean_uncertainty_fakes": 0.14875057339668274,
+      "seen_mean_uncertainty_genuine": 0.1119093969464302,
+      "unseen_auc": 0.9572866140592197,
+      "unseen_eer": 0.09372330413378699,
+      "unseen_false_negative_rate": 0.052631578947368474,
+      "unseen_false_positive_rate": 0.11994497936726273,
+      "unseen_novelty_auc_fake_vs_real": 0.50752913921668,
+      "unseen_fakes_flagged_novel": 0.0,
+      "unseen_genuine_flagged_novel": 0.021182943603851444,
+      "unseen_mean_uncertainty_fakes": 0.18195757269859314,
+      "unseen_mean_uncertainty_genuine": 0.11194571852684021
+    },
+    {
+      "held_out": "parallel_wavegan",
+      "n_unseen_fakes": 244,
+      "calibrated_unc_threshold": 0.40544459402561184,
+      "seen_auc": 0.9788637657262299,
+      "seen_eer": 0.07041958719257843,
+      "seen_false_negative_rate": 0.043357613596947675,
+      "seen_false_positive_rate": 0.09463548830811554,
+      "seen_novelty_auc_fake_vs_real": 0.8122213363830375,
+      "seen_fakes_flagged_novel": 0.23135622615331253,
+      "seen_genuine_flagged_novel": 0.023383768913342505,
+      "seen_mean_uncertainty_fakes": 0.16322699189186096,
+      "seen_mean_uncertainty_genuine": 0.19076420366764069,
+      "unseen_auc": 0.9602859268947166,
+      "unseen_eer": 0.08211152952849121,
+      "unseen_false_negative_rate": 0.07377049180327866,
+      "unseen_false_positive_rate": 0.09463548830811554,
+      "unseen_novelty_auc_fake_vs_real": 0.636332784630302,
+      "unseen_fakes_flagged_novel": 0.23770491803278687,
+      "unseen_genuine_flagged_novel": 0.023383768913342505,
+      "unseen_mean_uncertainty_fakes": 0.29960986971855164,
+      "unseen_mean_uncertainty_genuine": 0.19386883080005646
+    }
+  ],
+  "logo_skipped_for_time": [],
+  "gateway_unseen_mean": [
+    {
+      "configuration": "spoof head only (threshold 0.5)",
+      "fakes_auto_passed": 0.3046223204636574,
+      "genuine_sent_to_review": 0.0,
+      "genuine_auto_blocked": 0.08412043405165825
+    },
+    {
+      "configuration": "+ confidence bands (0.3 / 0.7)",
+      "fakes_auto_passed": 0.2512705735831548,
+      "genuine_sent_to_review": 0.05697692190126854,
+      "genuine_auto_blocked": 0.0614397065566254
+    },
+    {
+      "configuration": "+ uncertainty",
+      "fakes_auto_passed": 0.09650140428906842,
+      "genuine_sent_to_review": 0.4459116613174385,
+      "genuine_auto_blocked": 0.008375362983340975
+    },
+    {
+      "configuration": "+ novelty (full gateway)",
+      "fakes_auto_passed": 0.09058012930525755,
+      "genuine_sent_to_review": 0.46070609812012836,
+      "genuine_auto_blocked": 0.006388506801161546
+    },
+    {
+      "configuration": "full gateway, calibrated",
+      "fakes_auto_passed": 0.19339922936303747,
+      "genuine_sent_to_review": 0.14394008864435276,
+      "genuine_auto_blocked": 0.037597432370472264
+    }
+  ],
+  "calibrated_uncertainty_threshold": 0.4454215657711029,
+  "gateway_main_test": [
+    {
+      "configuration": "spoof head only (threshold 0.5)",
+      "fakes_auto_passed": 0.06505144374377697,
+      "fakes_blocked": 0.9349485562562231,
+      "fakes_sent_to_review": 0.0,
+      "genuine_auto_blocked": 0.07015130674002751,
+      "genuine_sent_to_review": 0.0
+    },
+    {
+      "configuration": "+ confidence bands (0.3 / 0.7)",
+      "fakes_auto_passed": 0.06073680716893462,
+      "fakes_blocked": 0.9286425489545304,
+      "fakes_sent_to_review": 0.010620643876535016,
+      "genuine_auto_blocked": 0.06602475928473177,
+      "genuine_sent_to_review": 0.010178817056396148
+    },
+    {
+      "configuration": "+ uncertainty",
+      "fakes_auto_passed": 0.003318951211417192,
+      "fakes_blocked": 0.45170925987387983,
+      "fakes_sent_to_review": 0.544971788914703,
+      "genuine_auto_blocked": 0.007152682255845942,
+      "genuine_sent_to_review": 0.5292984869325997
+    },
+    {
+      "configuration": "+ novelty (full gateway)",
+      "fakes_auto_passed": 0.003318951211417192,
+      "fakes_blocked": 0.21639561898440093,
+      "fakes_sent_to_review": 0.7802854298041819,
+      "genuine_auto_blocked": 0.0049518569463548835,
+      "genuine_sent_to_review": 0.5422283356258597
+    },
+    {
+      "configuration": "full gateway, calibrated",
+      "fakes_auto_passed": 0.027879190175904414,
+      "fakes_blocked": 0.5147693328908065,
+      "fakes_sent_to_review": 0.4573514769332891,
+      "genuine_auto_blocked": 0.038239339752407155,
+      "genuine_sent_to_review": 0.1378266850068776
+    }
+  ],
+  "in_the_wild": {
+    "n_real": 2000,
+    "n_fake": 2000,
+    "accuracy": 0.73375,
+    "auc": 0.8183263749999999,
+    "eer": 0.258,
+    "false_positive_rate": 0.1805,
+    "false_negative_rate": 0.352
+  },
+  "gateway_in_the_wild": [
+    {
+      "configuration": "spoof head only (threshold 0.5)",
+      "fakes_auto_passed": 0.352,
+      "fakes_blocked": 0.648,
+      "fakes_sent_to_review": 0.0,
+      "genuine_auto_blocked": 0.1805,
+      "genuine_sent_to_review": 0.0
+    },
+    {
+      "configuration": "+ confidence bands (0.3 / 0.7)",
+      "fakes_auto_passed": 0.331,
+      "fakes_blocked": 0.6255,
+      "fakes_sent_to_review": 0.0435,
+      "genuine_auto_blocked": 0.168,
+      "genuine_sent_to_review": 0.034
+    },
+    {
+      "configuration": "+ uncertainty",
+      "fakes_auto_passed": 0.0315,
+      "fakes_blocked": 0.1325,
+      "fakes_sent_to_review": 0.836,
+      "genuine_auto_blocked": 0.01,
+      "genuine_sent_to_review": 0.787
+    },
+    {
+      "configuration": "+ novelty (full gateway)",
+      "fakes_auto_passed": 0.0165,
+      "fakes_blocked": 0.0695,
+      "fakes_sent_to_review": 0.914,
+      "genuine_auto_blocked": 0.0095,
+      "genuine_sent_to_review": 0.8055
+    },
+    {
+      "configuration": "full gateway, calibrated",
+      "fakes_auto_passed": 0.1645,
+      "fakes_blocked": 0.3215,
+      "fakes_sent_to_review": 0.514,
+      "genuine_auto_blocked": 0.097,
+      "genuine_sent_to_review": 0.275
+    }
+  ],
+  "pool_by_source": [
+    {
+      "label": 0,
+      "source": "accentdb",
+      "n": 2469
+    },
+    {
+      "label": 0,
+      "source": "adarsh_tts",
+      "n": 2245
+    },
+    {
+      "label": 0,
+      "source": "common_voice",
+      "n": 3454
+    },
+    {
+      "label": 0,
+      "source": "fake_or_real",
+      "n": 5915
+    },
+    {
+      "label": 0,
+      "source": "ljspeech_real",
+      "n": 2460
+    },
+    {
+      "label": 0,
+      "source": "unidpro",
+      "n": 10
+    },
+    {
+      "label": 0,
+      "source": "vctk",
+      "n": 3447
+    },
+    {
+      "label": 1,
+      "source": "adarsh_tts",
+      "n": 2173
+    },
+    {
+      "label": 1,
+      "source": "fake_or_real",
+      "n": 5231
+    },
+    {
+      "label": 1,
+      "source": "fakeaudio",
+      "n": 6189
+    },
+    {
+      "label": 1,
+      "source": "mlaad",
+      "n": 5767
+    },
+    {
+      "label": 1,
+      "source": "mlaad_2026",
+      "n": 580
+    },
+    {
+      "label": 1,
+      "source": "unidpro",
+      "n": 60
+    }
+  ]
+}

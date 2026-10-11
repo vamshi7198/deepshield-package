@@ -1,0 +1,123 @@
+{
+ "sets": {
+  "clean_test": {
+   "gateway": {
+    "fakes_auto_passed": 2.8,
+    "genuine_review": 13.8,
+    "genuine_auto_blocked": 3.8,
+    "fakes_review": 45.7
+   },
+   "score_margin_same_review": {
+    "fakes_auto_passed": 2.2,
+    "genuine_review": 13.8,
+    "genuine_auto_blocked": 2.9,
+    "fakes_review": 16.4
+   }
+  },
+  "in_the_wild": {
+   "gateway": {
+    "fakes_auto_passed": 16.4,
+    "genuine_review": 27.5,
+    "genuine_auto_blocked": 9.7,
+    "fakes_review": 51.4
+   },
+   "score_margin_same_review": {
+    "fakes_auto_passed": 17.7,
+    "genuine_review": 27.5,
+    "genuine_auto_blocked": 7.8,
+    "fakes_review": 37.2
+   }
+  }
+ },
+ "logo": [
+  {
+   "family": "conformer_fastspeech2",
+   "gw_fakes_passed": 7.7,
+   "base_fakes_passed": 3.7,
+   "gw_gen_blocked": 3.5,
+   "base_gen_blocked": 3.1,
+   "review": 13.5,
+   "base_review": 13.5
+  },
+  {
+   "family": "for_tts",
+   "gw_fakes_passed": 55.7,
+   "base_fakes_passed": 57.2,
+   "gw_gen_blocked": 5.4,
+   "base_gen_blocked": 7.2,
+   "review": 14.8,
+   "base_review": 14.8
+  },
+  {
+   "family": "hifigan",
+   "gw_fakes_passed": 4.3,
+   "base_fakes_passed": 3.7,
+   "gw_gen_blocked": 5.0,
+   "base_gen_blocked": 4.8,
+   "review": 14.4,
+   "base_review": 14.4
+  },
+  {
+   "family": "melgan_family",
+   "gw_fakes_passed": 18.2,
+   "base_fakes_passed": 11.4,
+   "gw_gen_blocked": 4.1,
+   "base_gen_blocked": 3.8,
+   "review": 13.7,
+   "base_review": 13.7
+  },
+  {
+   "family": "mlaad_tts",
+   "gw_fakes_passed": 24.9,
+   "base_fakes_passed": 23.9,
+   "gw_gen_blocked": 1.0,
+   "base_gen_blocked": 1.1,
+   "review": 11.9,
+   "base_review": 11.9
+  },
+  {
+   "family": "modern_tts",
+   "gw_fakes_passed": 46.7,
+   "base_fakes_passed": 40.1,
+   "gw_gen_blocked": 1.8,
+   "base_gen_blocked": 2.3,
+   "review": 14.3,
+   "base_review": 14.3
+  },
+  {
+   "family": "parallel_wavegan",
+   "gw_fakes_passed": 4.1,
+   "base_fakes_passed": 4.1,
+   "gw_gen_blocked": 5.9,
+   "base_gen_blocked": 4.9,
+   "review": 12.7,
+   "base_review": 12.7
+  },
+  {
+   "family": "tts_2026",
+   "gw_fakes_passed": 11.9,
+   "base_fakes_passed": 8.8,
+   "gw_gen_blocked": 2.1,
+   "base_gen_blocked": 2.3,
+   "review": 13.0,
+   "base_review": 13.0
+  },
+  {
+   "family": "waveglow",
+   "gw_fakes_passed": 0.5,
+   "base_fakes_passed": 0.5,
+   "gw_gen_blocked": 5.0,
+   "base_gen_blocked": 4.5,
+   "review": 21.3,
+   "base_review": 21.3
+  }
+ ],
+ "logo_mean": {
+  "gw_fakes_passed": 19.33,
+  "base_fakes_passed": 17.04,
+  "gw_gen_blocked": 3.76,
+  "base_gen_blocked": 3.78,
+  "review": 14.4,
+  "base_review": 14.4
+ }
+}

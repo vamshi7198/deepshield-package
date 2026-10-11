@@ -1,0 +1,19 @@
+{
+  "id": "vamshipreetham07/deepshield-verification",
+  "title": "deepshield-verification",
+  "code_file": "deepshield_verification.ipynb",
+  "language": "python",
+  "kernel_type": "notebook",
+  "is_private": true,
+  "enable_gpu": true,
+  "enable_internet": true,
+  "dataset_sources": [
+    "adarshsingh0903/audio-deepfake-detection-dataset",
+    "unidpro/real-vs-fake-human-voice-deepfake-audio",
+    "walimuhammadahmad/fakeaudio",
+    "mohammedabdeldayem/the-fake-or-real-dataset",
+    "mathurinache/the-lj-speech-dataset"
+  ],
+  "competition_sources": [],
+  "kernel_sources": []
+}

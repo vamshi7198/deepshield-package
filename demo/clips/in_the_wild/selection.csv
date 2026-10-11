@@ -1,0 +1,25 @@
+file,speaker,label
+8168.wav,Mark Zuckerberg,bona-fide
+31559.wav,Mark Zuckerberg,bona-fide
+29648.wav,Mark Zuckerberg,bona-fide
+11316.wav,Mark Zuckerberg,spoof
+1795.wav,Mark Zuckerberg,spoof
+12873.wav,Mark Zuckerberg,spoof
+23164.wav,Barack Obama,bona-fide
+16263.wav,Barack Obama,bona-fide
+15480.wav,Barack Obama,bona-fide
+28696.wav,Barack Obama,spoof
+23208.wav,Barack Obama,spoof
+6040.wav,Barack Obama,spoof
+14909.wav,Queen Elizabeth II,bona-fide
+25530.wav,Queen Elizabeth II,bona-fide
+24512.wav,Queen Elizabeth II,bona-fide
+6128.wav,Queen Elizabeth II,spoof
+25978.wav,Queen Elizabeth II,spoof
+31100.wav,Queen Elizabeth II,spoof
+11528.wav,Arnold Schwarzenegger,bona-fide
+18133.wav,Arnold Schwarzenegger,bona-fide
+382.wav,Arnold Schwarzenegger,bona-fide
+18363.wav,Arnold Schwarzenegger,spoof
+25746.wav,Arnold Schwarzenegger,spoof
+21859.wav,Arnold Schwarzenegger,spoof

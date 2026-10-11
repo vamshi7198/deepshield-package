@@ -1,0 +1,27 @@
+[ 0.01 h]   scanned adarsh_tts    : 4447 audio files
+[ 0.02 h]   scanned unidpro       : 70 audio files
+[ 0.14 h]   scanned fakeaudio     : 134266 audio files
+[ 0.27 h]   scanned fake_or_real  : 169754 audio files
+[ 0.30 h]   scanned mlaad         : 36000 audio files
+[ 0.31 h]   scanned mlaad_2026    : 580 audio files
+[ 0.40 h]   scanned vctk          : 44242 audio files
+[ 0.44 h]   scanned accentdb      : 23496 audio files
+[ 0.59 h]   scanned common_voice  : 195776 audio files
+[ 0.61 h]   scanned in_the_wild   : 31779 audio files
+[ 0.61 h]   scanned ljspeech_real : 13100 audio files
+[ 0.61 h] discovery done
+[ 0.62 h] split done
+[ 1.04 h] feature extraction done
+[ 1.18 h] main model trained
+[ 1.19 h] in-the-wild test done
+[ 1.25 h] LOGO tts_2026: done in 0.06 h
+[ 1.29 h] LOGO modern_tts: done in 0.04 h
+[ 1.32 h] LOGO mlaad_tts: done in 0.04 h
+[ 1.36 h] LOGO for_tts: done in 0.04 h
+[ 1.42 h] LOGO conformer_fastspeech2: done in 0.06 h
+[ 1.48 h] LOGO melgan_family: done in 0.06 h
+[ 1.54 h] LOGO hifigan: done in 0.06 h
+[ 1.57 h] LOGO waveglow: done in 0.03 h
+[ 1.63 h] LOGO parallel_wavegan: done in 0.06 h
+[ 1.72 h] robustness done
+[ 1.83 h] naive baseline done

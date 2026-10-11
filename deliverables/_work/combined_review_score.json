@@ -1,0 +1,128 @@
+{
+ "weights": [
+  0.7589626987591773,
+  0.4807375905014481,
+  0.24467839149268436
+ ],
+ "logo": [
+  {
+   "family": "conformer_fastspeech2",
+   "review": 13.5,
+   "auc_margin": 0.846,
+   "auc_combined": 0.868,
+   "margin_fakes_passed": 3.7,
+   "combined_fakes_passed": 3.3,
+   "current_gateway_fakes_passed": 7.7,
+   "margin_gen_blocked": 3.1,
+   "combined_gen_blocked": 2.7,
+   "current_gateway_gen_blocked": 3.5
+  },
+  {
+   "family": "for_tts",
+   "review": 14.8,
+   "auc_margin": 0.571,
+   "auc_combined": 0.609,
+   "margin_fakes_passed": 57.2,
+   "combined_fakes_passed": 56.5,
+   "current_gateway_fakes_passed": 55.7,
+   "margin_gen_blocked": 7.2,
+   "combined_gen_blocked": 6.0,
+   "current_gateway_gen_blocked": 5.4
+  },
+  {
+   "family": "hifigan",
+   "review": 14.4,
+   "auc_margin": 0.794,
+   "auc_combined": 0.83,
+   "margin_fakes_passed": 3.7,
+   "combined_fakes_passed": 5.3,
+   "current_gateway_fakes_passed": 4.3,
+   "margin_gen_blocked": 4.8,
+   "combined_gen_blocked": 4.4,
+   "current_gateway_gen_blocked": 5.0
+  },
+  {
+   "family": "melgan_family",
+   "review": 13.7,
+   "auc_margin": 0.813,
+   "auc_combined": 0.819,
+   "margin_fakes_passed": 11.4,
+   "combined_fakes_passed": 14.6,
+   "current_gateway_fakes_passed": 18.2,
+   "margin_gen_blocked": 3.8,
+   "combined_gen_blocked": 3.5,
+   "current_gateway_gen_blocked": 4.1
+  },
+  {
+   "family": "mlaad_tts",
+   "review": 11.9,
+   "auc_margin": 0.779,
+   "auc_combined": 0.793,
+   "margin_fakes_passed": 23.9,
+   "combined_fakes_passed": 21.9,
+   "current_gateway_fakes_passed": 24.9,
+   "margin_gen_blocked": 1.1,
+   "combined_gen_blocked": 0.7,
+   "current_gateway_gen_blocked": 1.0
+  },
+  {
+   "family": "modern_tts",
+   "review": 14.3,
+   "auc_margin": 0.812,
+   "auc_combined": 0.822,
+   "margin_fakes_passed": 40.1,
+   "combined_fakes_passed": 40.7,
+   "current_gateway_fakes_passed": 46.7,
+   "margin_gen_blocked": 2.3,
+   "combined_gen_blocked": 1.6,
+   "current_gateway_gen_blocked": 1.8
+  },
+  {
+   "family": "parallel_wavegan",
+   "review": 12.7,
+   "auc_margin": 0.82,
+   "auc_combined": 0.835,
+   "margin_fakes_passed": 4.1,
+   "combined_fakes_passed": 3.7,
+   "current_gateway_fakes_passed": 4.1,
+   "margin_gen_blocked": 4.9,
+   "combined_gen_blocked": 4.8,
+   "current_gateway_gen_blocked": 5.9
+  },
+  {
+   "family": "tts_2026",
+   "review": 13.0,
+   "auc_margin": 0.855,
+   "auc_combined": 0.893,
+   "margin_fakes_passed": 8.8,
+   "combined_fakes_passed": 8.8,
+   "current_gateway_fakes_passed": 11.9,
+   "margin_gen_blocked": 2.3,
+   "combined_gen_blocked": 1.9,
+   "current_gateway_gen_blocked": 2.1
+  },
+  {
+   "family": "waveglow",
+   "review": 21.3,
+   "auc_margin": 0.846,
+   "auc_combined": 0.848,
+   "margin_fakes_passed": 0.5,
+   "combined_fakes_passed": 2.1,
+   "current_gateway_fakes_passed": 0.5,
+   "margin_gen_blocked": 4.5,
+   "combined_gen_blocked": 4.6,
+   "current_gateway_gen_blocked": 5.0
+  }
+ ],
+ "mean": {
+  "review": 14.4,
+  "auc_margin": 0.79,
+  "auc_combined": 0.81,
+  "margin_fakes_passed": 17.04,
+  "combined_fakes_passed": 17.43,
+  "current_gateway_fakes_passed": 19.33,
+  "margin_gen_blocked": 3.78,
+  "combined_gen_blocked": 3.36,
+  "current_gateway_gen_blocked": 3.76
+ }
+}

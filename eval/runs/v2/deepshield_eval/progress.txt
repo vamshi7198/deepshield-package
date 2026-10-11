@@ -1,0 +1,13 @@
+[ 0.31 h] discovery done
+[ 0.32 h] split done
+[ 0.75 h] feature extraction done
+[ 0.83 h] main model trained
+[ 0.90 h] LOGO modern_tts: done in 0.06 h
+[ 0.95 h] LOGO for_tts: done in 0.06 h
+[ 1.01 h] LOGO conformer_fastspeech2: done in 0.06 h
+[ 1.07 h] LOGO melgan_family: done in 0.06 h
+[ 1.14 h] LOGO hifigan: done in 0.06 h
+[ 1.18 h] LOGO waveglow: done in 0.04 h
+[ 1.24 h] LOGO parallel_wavegan: done in 0.06 h
+[ 1.32 h] robustness done
+[ 1.45 h] naive baseline done

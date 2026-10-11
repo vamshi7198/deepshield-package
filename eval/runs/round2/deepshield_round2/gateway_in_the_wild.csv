@@ -1,0 +1,6 @@
+configuration,fakes_auto_passed,fakes_blocked,fakes_sent_to_review,genuine_auto_blocked,genuine_sent_to_review
+spoof head only (threshold 0.5),0.352,0.648,0.0,0.1805,0.0
++ confidence bands (0.3 / 0.7),0.331,0.6255,0.0435,0.168,0.034
++ uncertainty,0.0315,0.1325,0.836,0.01,0.787
++ novelty (full gateway),0.0165,0.0695,0.914,0.0095,0.8055
+"full gateway, calibrated",0.1645,0.3215,0.514,0.097,0.275

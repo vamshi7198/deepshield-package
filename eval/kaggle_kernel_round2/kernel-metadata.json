@@ -1,0 +1,25 @@
+{
+  "id": "vamshipreetham07/deepshield-round2",
+  "title": "deepshield-round2",
+  "code_file": "deepshield_round2.ipynb",
+  "language": "python",
+  "kernel_type": "notebook",
+  "is_private": true,
+  "enable_gpu": true,
+  "enable_internet": true,
+  "dataset_sources": [
+    "adarshsingh0903/audio-deepfake-detection-dataset",
+    "unidpro/real-vs-fake-human-voice-deepfake-audio",
+    "walimuhammadahmad/fakeaudio",
+    "mohammedabdeldayem/the-fake-or-real-dataset",
+    "mathurinache/the-lj-speech-dataset",
+    "trapka/mlaadthe-multi-languagaudioanti-spoofing-dataset",
+    "smraj0198/mlaad-english-500",
+    "pratt3000/vctk-corpus",
+    "imsparsh/accentdb-core-extended",
+    "mozillaorg/common-voice",
+    "abdallamohamed312/in-the-wild-audio-deepfake"
+  ],
+  "competition_sources": [],
+  "kernel_sources": []
+}

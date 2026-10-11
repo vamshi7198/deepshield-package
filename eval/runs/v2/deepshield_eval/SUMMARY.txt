@@ -1,0 +1,29 @@
+DEEPSHIELD VERIFICATION — PLAIN-ENGLISH SUMMARY
+(runtime 1.4 h)
+
+Clean test set (2886 genuine, 2947 fake, no recording shared with training):
+  accuracy 94.0%, EER 6.0%
+  genuine audio wrongly flagged fake: 6.4%
+  fake audio wrongly passed as genuine: 5.6%
+
+Original-style random split gives 97.9% (28.3% of its validation clips had the same recording in training) vs 94.0% on the clean test.
+
+Unseen generators (model never trained on them):
+  modern_tts             EER seen 1.8% -> unseen 32.8%; unseen fakes passed as genuine 82.0%; flagged novel 9.4%
+  for_tts                EER seen 3.4% -> unseen 39.6%; unseen fakes passed as genuine 81.1%; flagged novel 4.1%
+  conformer_fastspeech2  EER seen 3.8% -> unseen 5.9%; unseen fakes passed as genuine 7.0%; flagged novel 0.0%
+  melgan_family          EER seen 3.8% -> unseen 13.8%; unseen fakes passed as genuine 34.9%; flagged novel 8.4%
+  hifigan                EER seen 3.1% -> unseen 5.1%; unseen fakes passed as genuine 7.3%; flagged novel 0.0%
+  waveglow               EER seen 9.1% -> unseen 8.7%; unseen fakes passed as genuine 12.4%; flagged novel 0.0%
+  parallel_wavegan       EER seen 3.6% -> unseen 5.5%; unseen fakes passed as genuine 6.9%; flagged novel 23.8%
+
+Risk gateway on unseen generators (mean over held-out families):
+  spoof head only (threshold 0.5)    fakes auto-passed 33.1% | genuine sent to review 0.0% | genuine auto-blocked 4.4%
+  + confidence bands (0.3 / 0.7)     fakes auto-passed 30.4% | genuine sent to review 2.3% | genuine auto-blocked 3.5%
+  + uncertainty                      fakes auto-passed 14.3% | genuine sent to review 38.0% | genuine auto-blocked 0.4%
+  + novelty (full gateway)           fakes auto-passed 13.8% | genuine sent to review 40.3% | genuine auto-blocked 0.2%
+
+Uncertainty: wrong predictions average 0.291 vs 0.122 for correct ones (AUC for spotting errors 0.83; 0.5 = no better than chance).
+Attack-type attribution accuracy on test fakes: 88.3%
+
+Robustness (EER): clean 5.5%, mp3_32kbps 8.7%, mp3_128kbps 6.0%, noise_0dB 29.4%, noise_10dB 22.0%, noise_20dB 14.4%, reverb 11.8%, telephone_8kHz 7.7%

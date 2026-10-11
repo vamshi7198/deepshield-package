@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DeepShield V5 — Model API Tester</title>
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --card-bg: #121826;
+      --card-border: #1f293d;
+      --primary: #6366f1;
+      --primary-hover: #4f46e5;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --text: #f3f4f6;
+      --text-muted: #9ca3af;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      min-height: 100vh;
+      padding: 2rem 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .container {
+      max-width: 900px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 1.5rem;
+    }
+
+    .logo-group h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #818cf8, #c084fc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .logo-group p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 0.8rem;
+      border-radius: 9999px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      background: #1e293b;
+      border: 1px solid var(--card-border);
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #64748b;
+    }
+
+    .status-dot.online { background: var(--success); box-shadow: 0 0 8px var(--success); }
+    .status-dot.offline { background: var(--danger); box-shadow: 0 0 8px var(--danger); }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .input-row {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    input[type="text"] {
+      flex: 1;
+      background: #0d1321;
+      border: 1px solid var(--card-border);
+      color: var(--text);
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-family: var(--font-mono);
+    }
+
+    input[type="text"]:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    button {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.25rem;
+      border-radius: 8px;
+      font-weight: 500;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    button:hover { background: var(--primary-hover); }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .upload-zone {
+      border: 2px dashed var(--card-border);
+      border-radius: 10px;
+      padding: 2.5rem 1rem;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.2s ease;
+      background: #0f1524;
+    }
+
+    .upload-zone:hover, .upload-zone.dragover {
+      border-color: var(--primary);
+    }
+
+    .audio-player-wrapper {
+      margin-top: 1rem;
+      display: none;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    audio { width: 100%; border-radius: 8px; }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .result-box {
+      background: #0d1321;
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .result-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+      margin-bottom: 0.35rem;
+    }
+
+    .result-value {
+      font-size: 1.4rem;
+      font-weight: 700;
+      font-family: var(--font-mono);
+    }
+
+    .risk-high { color: var(--danger); }
+    .risk-medium { color: var(--warning); }
+    .risk-low { color: var(--success); }
+
+    .json-output {
+      margin-top: 1rem;
+      background: #090d16;
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 1rem;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      max-height: 250px;
+      overflow-y: auto;
+      color: #93c5fd;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="logo-group">
+        <h1>🛡️ DeepShield V5</h1>
+        <p>Live ML Model API Gateway & Diagnostic Console</p>
+      </div>
+      <div class="status-badge" id="healthBadge">
+        <span class="status-dot" id="healthDot"></span>
+        <span id="healthText">Checking API...</span>
+      </div>
+    </div>
+
+    <!-- API Endpoint Config -->
+    <div class="card">
+      <div class="card-title">🌐 API Server Configuration</div>
+      <div class="input-row">
+        <input type="text" id="apiUrlInput" value="https://deepshield-rfjc.onrender.com" placeholder="https://deepshield-rfjc.onrender.com" />
+        <button id="pingBtn" onclick="checkHealth()">Check Status</button>
+        <button id="infoBtn" onclick="fetchModelInfo()">Model Info</button>
+      </div>
+    </div>
+
+    <!-- Audio Upload & Test -->
+    <div class="card">
+      <div class="card-title">🎙️ Audio Deepfake Voice Inference</div>
+      
+      <div style="display: flex; gap: 0.75rem; margin-bottom: 1rem; flex-wrap: wrap; align-items: center;">
+        <button id="micRecordBtn" class="record-btn" onclick="toggleMicRecording()">
+          <span id="micIcon">🎙️</span>
+          <span id="micText">Record Real Voice (3s)</span>
+        </button>
+        <span id="recordTimer" style="font-size: 0.85rem; color: #9ca3af; font-family: var(--font-mono);"></span>
+        <span style="font-size: 0.85rem; color: #text-muted; margin-left: auto;">Speak normally into your mic to test real human voice detection</span>
+      </div>
+
+      <div class="upload-zone" id="dropZone" onclick="document.getElementById('audioInput').click()">
+        <p style="font-weight: 500; font-size: 1rem; margin-bottom: 0.5rem;">Drop an audio file here or click to browse</p>
+        <p style="font-size: 0.8rem; color: var(--text-muted);">Supports WAV, MP3, FLAC, OGG, M4A, WEBM (Resampled to 16kHz 3s tensor automatically)</p>
+        <input type="file" id="audioInput" accept="audio/*" style="display: none;" onchange="handleFileSelect(event)" />
+      </div>
+
+      <div class="audio-player-wrapper" id="audioWrapper">
+        <audio id="audioPlayer" controls></audio>
+        <button id="predictBtn" onclick="runInference()" style="min-width: 140px;">Analyze Audio</button>
+      </div>
+    </div>
+
+    <!-- Results Section -->
+    <div class="card" id="resultsCard" style="display: none;">
+      <div class="card-title">📊 Multi-Head Detection Results</div>
+
+      <!-- Prominent Verdict Banner -->
+      <div id="verdictBanner" style="padding: 1.25rem; border-radius: 8px; margin-bottom: 1rem; text-align: center; border: 1px solid var(--card-border);">
+        <div style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 0.35rem;">Primary Verdict</div>
+        <div id="resVerdictBig" style="font-size: 2.2rem; font-weight: 800; font-family: var(--font-mono); margin-bottom: 0.35rem;">-</div>
+        <div id="resGatewayStage" style="font-size: 1rem; font-weight: 600; color: #93c5fd;">-</div>
+      </div>
+
+      <!-- Deterministic Rationale -->
+      <div id="rationaleBox" style="padding: 0.85rem 1.1rem; background: #0b1220; border-left: 4px solid #3b82f6; border-radius: 6px; margin-bottom: 1rem; font-size: 0.92rem; line-height: 1.5; color: #e2e8f0;">
+        <strong style="color: #60a5fa;">DeepShield Rationale:</strong> <span id="resRationaleText">-</span>
+      </div>
+
+      <div class="result-grid">
+        <div class="result-box">
+          <div class="result-label">Confidence</div>
+          <div class="result-value" id="resConfidence" style="color: #60a5fa;">-</div>
+        </div>
+        <div class="result-box">
+          <div class="result-label">Spoof Probability</div>
+          <div class="result-value" id="resSpoofProb">-</div>
+        </div>
+        <div class="result-box">
+          <div class="result-label">Real Probability</div>
+          <div class="result-value" id="resRealProb" style="color: #34d399;">-</div>
+        </div>
+        <div class="result-box">
+          <div class="result-label">Attack Attribution</div>
+          <div class="result-value" id="resAttackType" style="font-size: 1rem;">-</div>
+        </div>
+        <div class="result-box">
+          <div class="result-label">Uncertainty (MC)</div>
+          <div class="result-value" id="resUncertainty">-</div>
+        </div>
+        <div class="result-box">
+          <div class="result-label">Novelty Distance</div>
+          <div class="result-value" id="resNovelty">-</div>
+        </div>
+        <div class="result-box">
+          <div class="result-label">Risk Level</div>
+          <div class="result-value" id="resRisk">-</div>
+        </div>
+      </div>
+
+      <pre class="json-output" id="jsonOutput"></pre>
+    </div>
+  </div>
+
+  <script>
+    class DeepShieldClient {
+      constructor(baseUrl = 'https://deepshield-rfjc.onrender.com') {
+        this.baseUrl = baseUrl.replace(/\/+$/, '');
+      }
+
+      setBaseUrl(newUrl) {
+        this.baseUrl = newUrl.replace(/\/+$/, '');
+      }
+
+      async checkHealth() {
+        let lastErr = null;
+        for (const endpoint of ['/api/status', '/status', '/health']) {
+          try {
+            const res = await fetch(`${this.baseUrl}${endpoint}`, {
+              method: 'GET',
+              headers: { 'Accept': 'application/json' },
+            });
+            if (res.ok) {
+              return await res.json();
+            }
+          } catch (e) {
+            lastErr = e;
+          }
+        }
+        throw (lastErr || new Error('Service status check failed.'));
+      }
+
+      async getModelInfo() {
+        const res = await fetch(`${this.baseUrl}/api/model/info`, {
+          method: 'GET',
+          headers: { 'Accept': 'application/json' },
+        });
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}));
+          throw new Error(err.error || `Failed to fetch model info: HTTP ${res.status}`);
+        }
+        return await res.json();
+      }
+
+      async predict(fileOrBlob, filename = 'sample.wav') {
+        const formData = new FormData();
+        if (fileOrBlob instanceof File) {
+          formData.append('audio', fileOrBlob);
+        } else if (fileOrBlob instanceof Blob) {
+          formData.append('audio', fileOrBlob, filename);
+        } else {
+          throw new Error('Argument must be a File or Blob instance.');
+        }
+
+        const res = await fetch(`${this.baseUrl}/api/predict`, {
+          method: 'POST',
+          body: formData,
+        });
+
+        const data = await res.json();
+        if (!res.ok) {
+          throw new Error(data.error || data.detail || `Inference error: HTTP ${res.status}`);
+        }
+        return data;
+      }
+    }
+
+    const defaultApiUrl = (window.location.origin && window.location.origin.startsWith('http'))
+      ? window.location.origin
+      : 'https://deepshield-rfjc.onrender.com';
+
+    const inputEl = document.getElementById('apiUrlInput');
+    if (inputEl) {
+      inputEl.value = defaultApiUrl;
+      inputEl.placeholder = defaultApiUrl;
+    }
+
+    let selectedFile = null;
+    const client = new DeepShieldClient(defaultApiUrl);
+
+    window.checkHealth = async function() {
+      const url = document.getElementById('apiUrlInput').value;
+      client.setBaseUrl(url);
+
+      const dot = document.getElementById('healthDot');
+      const text = document.getElementById('healthText');
+      text.textContent = 'Connecting...';
+
+      try {
+        const data = await client.checkHealth();
+        dot.className = 'status-dot online';
+        text.textContent = `Online (${data.model} · ${data.device})`;
+      } catch (err) {
+        dot.className = 'status-dot offline';
+        text.textContent = `Offline: ${err.message}`;
+      }
+    };
+
+    window.fetchModelInfo = async function() {
+      const url = document.getElementById('apiUrlInput').value;
+      client.setBaseUrl(url);
+      try {
+        const info = await client.getModelInfo();
+        document.getElementById('resultsCard').style.display = 'block';
+        document.getElementById('jsonOutput').textContent = JSON.stringify(info, null, 2);
+      } catch (err) {
+        alert('Error fetching model info: ' + err.message);
+      }
+    };
+
+    function setFile(file) {
+      if (!file) return;
+      selectedFile = file;
+      const player = document.getElementById('audioPlayer');
+      player.src = URL.createObjectURL(file);
+      document.getElementById('audioWrapper').style.display = 'flex';
+    }
+
+    window.handleFileSelect = function(event) {
+      setFile(event.target.files[0]);
+    };
+
+    // Drag and drop support
+    const dropZone = document.getElementById('dropZone');
+    ['dragenter', 'dragover'].forEach(name => {
+      dropZone.addEventListener(name, (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
+    });
+    ['dragleave', 'drop'].forEach(name => {
+      dropZone.addEventListener(name, (e) => { e.preventDefault(); dropZone.classList.remove('dragover'); });
+    });
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('dragover');
+      if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+        setFile(e.dataTransfer.files[0]);
+      }
+    });
+
+    // ─── Live Microphone Voice Recording ──────────────────────────────────────
+    let mediaRecorder = null;
+    let audioChunks = [];
+    let recordInterval = null;
+
+    window.toggleMicRecording = async function() {
+      const btn = document.getElementById('micRecordBtn');
+      const timerEl = document.getElementById('recordTimer');
+
+      if (mediaRecorder && mediaRecorder.state === 'recording') {
+        mediaRecorder.stop();
+        return;
+      }
+
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        audioChunks = [];
+        mediaRecorder = new MediaRecorder(stream);
+
+        mediaRecorder.ondataavailable = (e) => {
+          if (e.data.size > 0) audioChunks.push(e.data);
+        };
+
+        mediaRecorder.onstop = () => {
+          clearInterval(recordInterval);
+          timerEl.textContent = '';
+          btn.className = 'record-btn';
+          document.getElementById('micIcon').textContent = '🎙️';
+          document.getElementById('micText').textContent = 'Record Real Voice (3s)';
+
+          const mimeType = mediaRecorder.mimeType || 'audio/webm';
+          const ext = mimeType.includes('wav') ? 'wav' : 'webm';
+          const audioBlob = new Blob(audioChunks, { type: mimeType });
+          const recordedFile = new File([audioBlob], `recorded_voice.${ext}`, { type: mimeType });
+          setFile(recordedFile);
+
+          // Stop all audio tracks to release microphone
+          stream.getTracks().forEach(t => t.stop());
+        };
+
+        mediaRecorder.start();
+        btn.className = 'record-btn recording';
+        document.getElementById('micIcon').textContent = '⏹️';
+        document.getElementById('micText').textContent = 'Recording (Speaking...)';
+
+        let secondsLeft = 3;
+        timerEl.textContent = `⏱️ ${secondsLeft}s remaining`;
+        recordInterval = setInterval(() => {
+          secondsLeft -= 1;
+          if (secondsLeft <= 0) {
+            clearInterval(recordInterval);
+            if (mediaRecorder.state === 'recording') mediaRecorder.stop();
+          } else {
+            timerEl.textContent = `⏱️ ${secondsLeft}s remaining`;
+          }
+        }, 1000);
+
+      } catch (err) {
+        alert('Microphone access failed: ' + err.message + '\nPlease allow microphone access in your browser.');
+      }
+    };
+
+    // ─── Run Model Prediction ────────────────────────────────────────────────
+    window.runInference = async function() {
+      if (!selectedFile) {
+        alert('Please choose or record an audio file first.');
+        return;
+      }
+
+      const btn = document.getElementById('predictBtn');
+      btn.disabled = true;
+      btn.textContent = 'Analyzing Tensor...';
+
+      const url = document.getElementById('apiUrlInput').value;
+      client.setBaseUrl(url);
+
+      try {
+        const res = await client.predict(selectedFile);
+        document.getElementById('resultsCard').style.display = 'block';
+
+        // Verdict Banner
+        const banner = document.getElementById('verdictBanner');
+        const verdictBig = document.getElementById('resVerdictBig');
+        const isDeepfake = res.is_deepfake || res.spoof_probability >= 0.50;
+
+        if (isDeepfake) {
+          banner.className = 'banner-synthetic';
+          verdictBig.textContent = 'SYNTHETIC (Deepfake / AI Cloned)';
+        } else {
+          banner.className = 'banner-authentic';
+          verdictBig.textContent = 'AUTHENTIC (Real Human Voice)';
+        }
+
+        document.getElementById('resGatewayStage').textContent = res.gateway_routing || (isDeepfake ? 'Stage 2: Block' : 'Stage 1: Pass');
+        document.getElementById('resRationaleText').textContent = res.rationale || 'Analysis completed successfully.';
+
+        // Metric Boxes
+        const confVal = res.confidence ? (res.confidence * 100).toFixed(1) : (Math.max(res.spoof_probability, 1 - res.spoof_probability) * 100).toFixed(1);
+        document.getElementById('resConfidence').textContent = `${confVal}%`;
+        document.getElementById('resSpoofProb').textContent = `${(res.spoof_probability * 100).toFixed(1)}%`;
+        document.getElementById('resRealProb').textContent = `${(res.real_probability * 100).toFixed(1)}%`;
+
+        const atkLabel = res.attack_type ? res.attack_type.label : '-';
+        const atkConf = (res.attack_type && res.attack_type.confidence) ? ` (${(res.attack_type.confidence * 100).toFixed(0)}%)` : '';
+        document.getElementById('resAttackType').textContent = `${atkLabel}${atkConf}`;
+
+        document.getElementById('resUncertainty').textContent = `±${(res.uncertainty * 100).toFixed(2)}%`;
+        document.getElementById('resNovelty').textContent = `${res.novelty.score} (${res.novelty.is_novel ? 'OOD / Novel' : 'Known'})`;
+
+        const riskEl = document.getElementById('resRisk');
+        riskEl.textContent = res.risk_level;
+        riskEl.className = 'result-value risk-' + res.risk_level.toLowerCase();
+
+        document.getElementById('jsonOutput').textContent = JSON.stringify(res, null, 2);
+      } catch (err) {
+        alert('Inference Failed: ' + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Analyze Audio';
+      }
+    };
+
+    // Auto-check on load
+    window.addEventListener('DOMContentLoaded', checkHealth);
+  </script>
+</body>
+</html>
