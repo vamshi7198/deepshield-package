@@ -1,0 +1,172 @@
+[
+ {
+  "case": "A_real_person_alone",
+  "seconds": 6.0,
+  "final_p": 0.137373,
+  "detector_p": 4.2e-05,
+  "verdict": "AUTHENTIC",
+  "route": "Stage 3: High Uncertainty -> Quality-Control Review",
+  "most_suspicious_at_s": 0.5,
+  "windows": [
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ]
+ },
+ {
+  "case": "B_ai_voice_alone",
+  "seconds": 4.9,
+  "final_p": 0.998194,
+  "detector_p": 0.999995,
+  "verdict": "SYNTHETIC",
+  "route": "Stage 2: Block (Automated Termination)",
+  "most_suspicious_at_s": 0.0,
+  "windows": [
+   1.0,
+   0.47,
+   0.0,
+   1.0,
+   1.0
+  ]
+ },
+ {
+  "case": "C_half_real_then_half_ai",
+  "seconds": 6.0,
+  "final_p": 0.844082,
+  "detector_p": 0.960966,
+  "verdict": "SYNTHETIC",
+  "route": "Stage 2: Block (Automated Termination)",
+  "most_suspicious_at_s": 2.99,
+  "windows": [
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.92,
+   1.0
+  ]
+ },
+ {
+  "case": "D_half_ai_then_half_real",
+  "seconds": 6.0,
+  "final_p": 0.963423,
+  "detector_p": 0.500013,
+  "verdict": "SYNTHETIC",
+  "route": "Stage 4: Unknown Pattern (novel / OOD) -> Human Review",
+  "most_suspicious_at_s": 0.0,
+  "windows": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ]
+ },
+ {
+  "case": "E_mostly_real_short_ai_insert",
+  "seconds": 7.5,
+  "final_p": 0.60442,
+  "detector_p": 0.567113,
+  "verdict": "SYNTHETIC",
+  "route": "Stage 3: High Uncertainty -> Quality-Control Review",
+  "most_suspicious_at_s": 2.0,
+  "windows": [
+   0.0,
+   0.0,
+   0.0,
+   0.75,
+   0.95,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ]
+ },
+ {
+  "case": "F_two_real_people_spliced",
+  "seconds": 6.0,
+  "final_p": 0.196725,
+  "detector_p": 1.3e-05,
+  "verdict": "AUTHENTIC",
+  "route": "Stage 1: Pass (Automated Clearance)",
+  "most_suspicious_at_s": 0.0,
+  "windows": [
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ]
+ },
+ {
+  "case": "G_ai_voice_speaking_hindi_1",
+  "seconds": 8.6,
+  "final_p": 0.994012,
+  "detector_p": 1.0,
+  "verdict": "SYNTHETIC",
+  "route": "Stage 2: Block (Automated Termination)",
+  "most_suspicious_at_s": 0.0,
+  "windows": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   0.78,
+   0.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ]
+ },
+ {
+  "case": "H_ai_voice_speaking_hindi_2",
+  "seconds": 6.0,
+  "final_p": 0.999929,
+  "detector_p": 0.999999,
+  "verdict": "SYNTHETIC",
+  "route": "Stage 4: Unknown Pattern (novel / OOD) -> Human Review",
+  "most_suspicious_at_s": 2.5,
+  "windows": [
+   0.99,
+   0.0,
+   0.0,
+   0.0,
+   1.0,
+   1.0,
+   0.97,
+   1.0
+  ]
+ },
+ {
+  "case": "I_real_recording_replayed_in_room",
+  "seconds": 6.0,
+  "final_p": 0.014875,
+  "detector_p": 0.234706,
+  "verdict": "AUTHENTIC",
+  "route": "Stage 3: High Uncertainty -> Quality-Control Review",
+  "most_suspicious_at_s": 3.0,
+  "windows": [
+   0.06,
+   0.0,
+   0.0,
+   0.0,
+   0.05,
+   0.01,
+   0.41
+  ]
+ }
+]

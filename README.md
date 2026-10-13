@@ -9,6 +9,8 @@ The students' original code and GitHub repository were **not modified**; all wor
 |---|---|---|
 | Management briefing | `deliverables/DeepShield_Management_Briefing_v2.pptx` | 22 slides for senior management, speaker notes on every slide; v2 (Oct 2026) adds the add-ons, robustness changes and the new demo sequence |
 | Patent pre-disclosure | `deliverables/DeepShield_Patent_PreDOI_v2.0.pptx` | The inventors' IP Pre-DOI template, corrected and extended (30 slides); v2.0 adds claims 14–15, the add-on module and evidence, SASV prior art, corrected claim statuses |
+| Plain-language guide | `deliverables/DeepShield_Explained_Plain_Language.docx` | 16-page Word guide for non-technical readers: which cases are caught and not caught (mimicry, cut-and-joined audio, Hindi, phone audio…), each block explained, next steps, ready answers for management. Built by `tools/build_explainer_doc.js` |
+| Scenario clips | `demo/clips/scenarios/` | 9 test recordings behind the guide (half real/half AI, two real people joined, AI Hindi, replay…); results in `deliverables/_work/scenario_results.json` |
 | Live demo | `demo/` → after setup, double-click `demo/start_demo.bat` | Runs fully on the laptop at http://localhost:8080 (students' UI, unchanged) |
 | Demo clips | `demo/clips/in_the_wild/` | 24 clips: 4 public figures × 3 genuine + 3 deepfake, never used in training |
 | Verification notebook | `eval/deepshield_verification.ipynb` | Round 1: corrected evaluation of the students' design |
