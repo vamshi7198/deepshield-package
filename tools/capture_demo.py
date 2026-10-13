@@ -13,7 +13,7 @@ OUT = os.path.join(ROOT, "deliverables", "_work", "screens")
 os.makedirs(OUT, exist_ok=True)
 
 UPLOADS = [
-    ("result_genuine_pass", "Mark_Zuckerberg_GENUINE_8168.wav"),
+    ("result_genuine_pass", "Mark_Zuckerberg_GENUINE_31559.wav"),
     ("result_deepfake_block", "Barack_Obama_DEEPFAKE_23208.wav"),
     ("result_review_uncertain", "Mark_Zuckerberg_DEEPFAKE_11316.wav"),
     ("result_review_too_short", "Queen_Elizabeth_II_DEEPFAKE_25978.wav"),

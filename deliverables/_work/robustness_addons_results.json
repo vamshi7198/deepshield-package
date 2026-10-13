@@ -1,0 +1,41 @@
+{
+  "_about": "Laptop measurements, October 2026, round-2 model unchanged. In-the-Wild sample: 800 clips (400 genuine / 400 fake), 54 speakers, downloaded separately from the 24 demo clips; split by speaker. Produced by the scripts described in README (Robustness update, Add-ons). Percentages are fractions.",
+  "windows": {
+    "_about": "Old app (2-12 back-to-back windows, max) vs new (3 s windows every 0.5 s, mean of top third), end to end incl. gateway.",
+    "all_800": {"old_accuracy": 0.790, "new_accuracy": 0.798},
+    "test_speakers": {"old_accuracy": 0.752, "new_accuracy": 0.777, "old_genuine_auto_blocked": 0.063, "new_genuine_auto_blocked": 0.034,
+                      "old_fakes_auto_passed": 0.040, "new_fakes_auto_passed": 0.056},
+    "dev_speakers": {"old_accuracy": 0.829, "new_accuracy": 0.819},
+    "neerja_indian_english_tts": {"old_p": 0.075, "new_p": 0.997},
+    "repeat_uploads_same_route": {"old": false, "new": true}
+  },
+  "stability_check": {
+    "_about": "Re-scoring under faint noise, half gain and 8 kHz telephone band; tried as an extra review signal and dropped.",
+    "error_spotting_auc_dev": 0.561, "error_spotting_auc_test": 0.628, "score_margin_auc_test": 0.682,
+    "gain_at_equal_workload": "none"
+  },
+  "addons": {
+    "_about": "Fitted on 741 clips / 50 speakers; the 4 demo speakers and the 24 demo clips excluded from all fitting.",
+    "cv_by_speaker": {
+      "detector": {"accuracy": 0.803, "eer": 0.197, "genuine_flagged": 0.18, "fakes_passed": 0.22, "n": 741},
+      "reference_bank": {"accuracy": 0.918, "eer": 0.086, "genuine_flagged": 0.08, "fakes_passed": 0.09, "n": 741},
+      "detector_same_clips_as_speaker_check": {"accuracy": 0.806, "eer": 0.172, "genuine_flagged": 0.15, "fakes_passed": 0.21, "n": 479},
+      "speaker_check_5_enrolled": {"accuracy": 0.891, "eer": 0.148, "genuine_flagged": 0.24, "fakes_passed": 0.06, "n": 479}
+    },
+    "demo_speakers_held_out": {
+      "_about": "Obama, Zuckerberg, Schwarzenegger, Queen Elizabeth II: 39 non-demo, non-enrolled clips.",
+      "detector": {"accuracy": 0.641, "eer": 0.305},
+      "reference_bank": {"accuracy": 0.846, "eer": 0.102},
+      "speaker_check": {"accuracy": 0.846, "eer": 0.119}
+    },
+    "demo_clips_24": {"detector_correct": 13, "reference_bank_correct": 21, "speaker_check_correct": 15},
+    "laptop_samples_14": {"detector_correct": 11, "reference_bank_correct": 14,
+                          "partial_deepfake_splice": {"detector_p": 0.00, "reference_bank_p": 0.66, "route": "review"}},
+    "speaker_distance_auc_alone": [0.87, 0.89]
+  },
+  "demo_sequence": [
+    ["Mark_Zuckerberg_GENUINE_31559.wav", "Pass"],
+    ["Barack_Obama_DEEPFAKE_23208.wav", "Block"],
+    ["Mark_Zuckerberg_DEEPFAKE_11316.wav", "Review (borderline score 0.50)"]
+  ]
+}

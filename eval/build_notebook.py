@@ -1,8 +1,10 @@
 """Builds a Kaggle notebook from a `# %%`-cell Python script.
 
-Usage: python build_notebook.py [--smoke | --full] [--src deepshield_round2.py] [--kernel kaggle_kernel_round2]
+Usage: python build_notebook.py [--smoke | --full] [--inline-core] [--src deepshield_round2.py] [--kernel kaggle_kernel_round2]
 Defaults: --src deepshield_verification.py --kernel kaggle_kernel
 Writes <src>.ipynb next to this file and into <kernel>/ (the folder pushed with `kaggle kernels push`).
+--inline-core replaces the `from deepshield_r3_core import *` line with that module's source, as its own cell,
+so the notebook is self-contained on Kaggle.
 """
 import json, re, sys, os
 
@@ -20,6 +22,12 @@ if "--full" in sys.argv:
     src = re.sub(r"^SMOKE_TEST = True", "SMOKE_TEST = False", src, count=1, flags=re.M)
 elif "--smoke" in sys.argv:
     src = re.sub(r"^SMOKE_TEST = False", "SMOKE_TEST = True", src, count=1, flags=re.M)
+if "--inline-core" in sys.argv:
+    core = open(os.path.join(HERE, "deepshield_r3_core.py"), encoding="utf-8").read()
+    line = re.search(r"^from deepshield_r3_core import \*.*$", src, flags=re.M)
+    if not line:
+        sys.exit("--inline-core: no `from deepshield_r3_core import *` line in " + src_name)
+    src = src[:line.start()] + "\n# %%\n" + core.strip() + "\n\n# %%\n" + src[line.end():]
 
 parts = re.split(r"^# %%(.*)$", src, flags=re.M)
 cells = []

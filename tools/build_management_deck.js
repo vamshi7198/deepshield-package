@@ -6,6 +6,7 @@ const React = require("react");
 const ReactDOMServer = require("react-dom/server");
 const sharp = require("sharp");
 const fa = require("react-icons/fa");
+// apply_theme.js ships with the pptx skill; point PPTX_SKILL_DIR at that skill's folder.
 const { applyTheme } = require(path.join(
   process.env.PPTX_SKILL_DIR ||
     "C:/Users/vamsh/.claude/skills/synced/789f2271-fe4d-427f-a1bf-d240837d42ba_be36b5a9-c048-4fa3-8b16-96e9443bf50c/pptx",
@@ -15,7 +16,10 @@ const { applyTheme } = require(path.join(
 const ROOT = path.resolve(__dirname, "..");
 const SCREENS = path.join(ROOT, "deliverables/_work/screens");
 const FIGS = path.join(ROOT, "deliverables/_work/figs");
-const OUT = path.join(ROOT, "deliverables/DeepShield_Management_Briefing.pptx");
+const OUT = path.join(ROOT, "deliverables/DeepShield_Management_Briefing_v2.pptx");
+// October 2026 laptop measurements: overlapping windows, add-ons without retraining
+const R = require(path.join(ROOT, "deliverables/_work/robustness_addons_results.json"));
+const P = (v) => `${Math.round(100 * v)}%`;
 
 const THEME = {
   name: "DeepShield Briefing",
@@ -133,7 +137,7 @@ function fitImg(slide, file, pw, ph, x, y, w, h, o = {}) {
   s.addText("DeepShield", { placeholder: "title" });
   s.addText("Telling real human voices from AI-generated ones, with a human safety net for the hard cases", { placeholder: "body" });
   circleIcon(s, I.shield, 0.8, 1.05, 1.0, HEX.accent1);
-  text(s, "Senior management briefing · live demo", 0.8, 6.4, 8, 0.4, { fontSize: 14, color: "94A3B8" });
+  text(s, "Senior management briefing · live demo · updated October 2026", 0.8, 6.4, 8, 0.4, { fontSize: 14, color: "94A3B8" });
   s.addNotes(
     "Good morning. Today I'll show you DeepShield, a system that listens to a voice recording and tells us whether it is a real person or an AI-generated voice. " +
     "I'll keep it simple: first the problem, then how the system works block by block, then what our tests show, and finally a live demo on this laptop."
@@ -269,8 +273,8 @@ function fitImg(slide, file, pw, ph, x, y, w, h, o = {}) {
   text(s, "What it does", 0.6, 1.4, 6, 0.4, { fontSize: 18, bold: true, color: HEX.accent1 });
   text(s, [
     { text: "Converts any audio file to one standard format (16,000 samples per second)", options: { bullet: true, breakLine: true } },
-    { text: "Cuts long recordings into 3-second pieces and checks each one", options: { bullet: true, breakLine: true } },
-    { text: "Flags the most suspicious piece, so a fake sentence hidden in a long call is not missed", options: { bullet: true, breakLine: true } },
+    { text: "Checks the whole recording in overlapping 3-second pieces, a new one every half second", options: { bullet: true, breakLine: true } },
+    { text: "Scores the clip from its most suspicious third, so a fake sentence hidden in a long call is not missed, and the same file always gets the same answer", options: { bullet: true, breakLine: true } },
     { text: "Clips shorter than 2 seconds go to human review: too little speech to judge safely", options: { bullet: true } },
   ], 0.6, 1.9, 6.1, 3.0, { fontSize: 16, paraSpaceAfter: 8 });
   text(s, "How we made it robust", 7.1, 1.4, 5.6, 0.4, { fontSize: 18, bold: true, color: HEX.accent1 });
@@ -286,7 +290,8 @@ function fitImg(slide, file, pw, ph, x, y, w, h, o = {}) {
   card(s, 0.6, 5.35, 6.1, 1.25, { fill: "E6F6F4" });
   text(s, "Why: real-world audio is messy. A detector trained only on clean studio recordings breaks as soon as it hears a phone call.", 0.8, 5.5, 5.7, 1.0, { fontSize: 15, italic: true, color: HEX.dk1 });
   s.addNotes(
-    "The first step is housekeeping. Every recording is converted to the same format and cut into three-second pieces, and the system looks for the most suspicious piece, so one fake sentence in a long call isn't missed. " +
+    "The first step is housekeeping. Every recording is converted to the same format and checked in overlapping three-second pieces, a new one every half second, and the clip is scored from its most suspicious third, so one fake sentence in a long call isn't missed. " +
+    "Since October the same file always gets exactly the same answer; before, borderline clips could switch between block and review on a second upload. " +
     "Very short clips, under two seconds, go straight to a human, because there simply isn't enough speech to judge. " +
     "During training we deliberately degraded recordings with compression, noise, echo and phone-line effects, like practising in the rain before match day, so it copes with real calls."
   );
@@ -524,6 +529,68 @@ function fitImg(slide, file, pw, ph, x, y, w, h, o = {}) {
     "To be precise: most of this gain comes from having a human review lane at all. The four specialists add a smaller extra benefit on never-seen AI tools, and improving that is part of the next steps."
   );
 
+  // =============================================================== NEW THIS MONTH
+  pres.addSection({ title: "New in October" });
+  const A = R.addons;
+
+  // 15. Add-ons without retraining
+  s = pres.addSlide({ masterName: "CONTENT", sectionTitle: "New in October" });
+  s.addText("Two add-ons lift real-world accuracy, with no retraining", { placeholder: "title" });
+  const acats = ["New speakers, real-world clips", "Demo speakers (held out)", "The 24 demo clips"];
+  s.addChart(pres.charts.BAR, [
+    { name: "Detector alone", labels: acats, values: [A.cv_by_speaker.detector.accuracy, A.demo_speakers_held_out.detector.accuracy, A.demo_clips_24.detector_correct / 24].map((v) => +(100 * v).toFixed(1)) },
+    { name: "+ Reference bank", labels: acats, values: [A.cv_by_speaker.reference_bank.accuracy, A.demo_speakers_held_out.reference_bank.accuracy, A.demo_clips_24.reference_bank_correct / 24].map((v) => +(100 * v).toFixed(1)) },
+    { name: "+ Speaker check", labels: acats, values: [A.cv_by_speaker.speaker_check_5_enrolled.accuracy, A.demo_speakers_held_out.speaker_check.accuracy, A.demo_clips_24.speaker_check_correct / 24].map((v) => +(100 * v).toFixed(1)) },
+  ], { ...chartBase, x: 0.6, y: 1.4, w: 7.0, h: 4.45, chartColors: ["94A3B8", HEX.accent1, HEX.accent5], title: "Correct verdicts (%)", valAxisMaxVal: 100, valAxisMinVal: 0, dataLabelFormatCode: '0"%"' });
+  const addonCards = [
+    [I.db, "Reference bank", "A small extra layer tuned on a few hundred labelled clips of the kind of audio we handle. The AI itself is unchanged.", "Before a pilot: retune it on our own labelled audio."],
+    [I.user, "Speaker check", "When a caller claims to be a known person, compare the voice with 3–5 verified recordings of that person.", `Fewer fakes slip through (${P(A.cv_by_speaker.detector_same_clips_as_speaker_check.fakes_passed)} → ${P(A.cv_by_speaker.speaker_check_5_enrolled.fakes_passed)}), more genuine calls checked (${P(A.cv_by_speaker.detector_same_clips_as_speaker_check.genuine_flagged)} → ${P(A.cv_by_speaker.speaker_check_5_enrolled.genuine_flagged)}).`],
+  ];
+  addonCards.forEach(([ic, h, d, note], i) => {
+    const y = 1.4 + i * 2.3;
+    card(s, 7.9, y, 4.8, 2.1, { fill: HEX.lt2 });
+    circleIcon(s, ic, 8.1, y + 0.2, 0.75, HEX.accent1);
+    text(s, h, 9.05, y + 0.28, 3.5, 0.45, { fontSize: 18, bold: true });
+    text(s, d, 8.1, y + 1.0, 4.4, 0.7, { fontSize: 13, color: HEX.dk2 });
+    text(s, note, 8.1, y + 1.62, 4.4, 0.45, { fontSize: 12, italic: true, color: HEX.accent2 });
+  });
+  card(s, 0.6, 6.05, 12.1, 0.7, { fill: "E6F6F4" });
+  text(s, "Tested only on speakers the add-ons were never tuned on; demo speakers and clips kept out of all tuning. Speaker check, first group: 479 clips with enough recordings to enroll (detector alone on them: 81%).", 0.8, 6.05, 11.7, 0.7, { fontSize: 14, italic: true, valign: "middle" });
+  s.addNotes(
+    "This month we added two things on top of the existing AI, without retraining it. " +
+    `The first is a reference bank: a small extra layer tuned on a few hundred labelled examples of the kind of audio we deal with. On real-world clips from speakers it was never tuned on, accuracy goes from ${P(A.cv_by_speaker.detector.accuracy)} to ${P(A.cv_by_speaker.reference_bank.accuracy)}; on the 24 demo clips, from ${A.demo_clips_24.detector_correct} to ${A.demo_clips_24.reference_bank_correct} correct. ` +
+    "It was tuned on one public collection, so before any pilot we would retune it on our own labelled audio. " +
+    "The second is a speaker check: when a caller claims to be a known person, we compare the voice with a few verified recordings of that person. It lets far fewer fakes through, at the cost of sending more genuine calls to a person. " +
+    "We kept the demo speakers and clips completely out of the tuning, so these numbers are fair."
+  );
+
+  // 16. Other changes this month
+  s = pres.addSlide({ masterName: "CONTENT", sectionTitle: "New in October" });
+  s.addText("Also new: steadier answers and fewer blind spots", { placeholder: "title" });
+  const W3 = R.windows;
+  const news = [
+    [I.check, HEX.accent3, "Same answer every time", "Before, a borderline clip could be blocked on one upload and sent to review on the next. Now the same file always gets the same decision."],
+    [I.search, HEX.accent1, "No blind spots inside a recording", `Every half second is now checked. An Indian-English AI voice that scored ${P(W3.neerja_indian_english_tts.old_p)} fake is now caught (${(100 * W3.neerja_indian_english_tts.new_p).toFixed(1)}%). Overall accuracy is about the same (${P(W3.all_800.old_accuracy)} → ${P(W3.all_800.new_accuracy)}).`],
+    [I.cut, HEX.accent4, "Spliced fakes", `1.8 s of AI speech inserted into a real recording: the detector alone missed it (${P(A.laptop_samples_14.partial_deepfake_splice.detector_p)}); with the reference bank it goes to review (${P(A.laptop_samples_14.partial_deepfake_splice.reference_bank_p)}).`],
+    [I.flask, HEX.accent6, "Tried and dropped", "Re-checking each clip with added noise to spot shaky verdicts did not help at the same review workload, so we did not keep it."],
+  ];
+  news.forEach(([ic, col, h, d], i) => {
+    const x = 0.6 + (i % 2) * 6.15, y = 1.4 + Math.floor(i / 2) * 2.3;
+    card(s, x, y, 5.95, 2.1, { fill: HEX.lt2 });
+    circleIcon(s, ic, x + 0.25, y + 0.3, 0.85, col);
+    text(s, h, x + 1.3, y + 0.25, 4.45, 0.45, { fontSize: 18, bold: true });
+    text(s, d, x + 1.3, y + 0.75, 4.45, 1.3, { fontSize: 14, color: HEX.dk2 });
+  });
+  card(s, 0.6, 6.15, 12.1, 0.6, { fill: HEX.dk1 });
+  text(s, "Next: full retraining (round 3) is built and tested; it needs a few hours of cloud GPU time.", 0.8, 6.15, 11.7, 0.6, { fontSize: 15, bold: true, color: "FFFFFF", valign: "middle" });
+  s.addNotes(
+    "A few other changes this month. First, the system now gives exactly the same answer every time for the same file; before, a borderline clip could flip between block and review. " +
+    "Second, it now checks every half second of a recording instead of a few spaced-out pieces. That closed blind spots: an Indian-English AI voice it used to miss is now caught. Overall accuracy is about the same; the benefit is consistency. " +
+    "Third, we tested a spliced fake, a short AI sentence dropped into a real recording. The detector alone missed it; with the reference bank it goes to a person. " +
+    "And we tried one idea that did not help, so we dropped it. " +
+    "The full retraining, which should give the biggest accuracy gain, is built and tested on the laptop; it needs a few hours of cloud GPU time, or about an hour and a half if the data preparation is first done on ordinary processors."
+  );
+
   // =============================================================== DEMO
   pres.addSection({ title: "Live demo" });
 
@@ -532,8 +599,8 @@ function fitImg(slide, file, pw, ph, x, y, w, h, o = {}) {
   s.addText("Live demo: three real cases", { placeholder: "title" });
   const demos = [
     ["result_genuine_pass_card.png", 1480, 1688, HEX.accent3, "Genuine voice → Pass", "Real Mark Zuckerberg interview clip. Low risk, cleared automatically."],
-    ["result_deepfake_block_card.png", 1480, 1688, HEX.accent2, "AI voice → Block", "AI-generated Barack Obama clip. Fake score 100%, blocked."],
-    ["result_review_uncertain_card.png", 1480, 1734, HEX.accent4, "Unsure → Human review", "AI-generated Zuckerberg clip. Flagged, but uncertainty is high, so a person checks it."],
+    ["result_deepfake_block_card.png", 1480, 1688, HEX.accent2, "AI voice → Block", "AI-generated Barack Obama clip. Fake score 95%, blocked."],
+    ["result_review_uncertain_card.png", 1480, 1688, HEX.accent4, "Unsure → Human review", "AI-generated Zuckerberg clip. Fake score right on 50%, so a person checks it."],
   ];
   demos.forEach(([f, pw, ph, col, h, d], i) => {
     const x = 0.6 + i * 4.15;
@@ -544,8 +611,10 @@ function fitImg(slide, file, pw, ph, x, y, w, h, o = {}) {
   });
   s.addNotes(
     "Now let me switch to the live system. [Switch to the browser: double-click start_demo.bat if it isn't already open, then go to http://localhost:8080 and click Detector.] " +
-    "I'll upload three clips from the folder demo\\clips\\in_the_wild. First, a genuine Zuckerberg interview: it passes. Second, an AI-generated Obama clip: it's blocked. " +
-    "Third, an AI-generated Zuckerberg clip where the system is unsure, so instead of guessing it sends it to a human. That third case is the whole point of DeepShield. " +
+    "I'll upload three clips from the folder demo\\clips\\in_the_wild, in this order: Mark_Zuckerberg_GENUINE_31559, Barack_Obama_DEEPFAKE_23208, Mark_Zuckerberg_DEEPFAKE_11316. " +
+    "First, a genuine Zuckerberg interview: it passes. Second, an AI-generated Obama clip: it's blocked. " +
+    "Third, an AI-generated Zuckerberg clip that sits right on the line, so instead of guessing it sends it to a human. That third case is the whole point of DeepShield. " +
+    "These three always give the same result now. " +
     "If the live system has any problem, these screenshots show the same three results."
   );
 
@@ -560,7 +629,7 @@ function fitImg(slide, file, pw, ph, x, y, w, h, o = {}) {
     [I.robot, "Brand-new AI voice tools still get through more often (about 1 in 3 in our hardest tests)"],
     [I.volume, "Heavy background noise reduces accuracy"],
     [I.clock, "Clips under 2 seconds cannot be judged; they go to review"],
-    [I.cut, "Edited real recordings (spliced or voice-converted) have not been tested yet"],
+    [I.cut, "Spliced recordings fool the AI alone; the reference bank catches our test case, but it needs wider testing"],
   ];
   lim.forEach(([ic, t], i) => {
     const y = 1.95 + i * 1.0;
@@ -569,8 +638,8 @@ function fitImg(slide, file, pw, ph, x, y, w, h, o = {}) {
   });
   text(s, "Next steps", 7.1, 1.4, 5.6, 0.45, { fontSize: 19, bold: true, color: HEX.accent1 });
   const nxt = [
-    [I.db, "Keep adding new AI voice tools and varied real voices to training"],
-    [I.user, "Make better use of the specialists' warning signs, and learn from reviewers' decisions"],
+    [I.db, "Run the round-3 retraining (ready; a few GPU hours): new voices, spliced fakes, Indian-accent fakes"],
+    [I.user, "Retune the add-ons on our own audio; test the speaker check with recordings from separate calls"],
     [I.phone, "Pilot on real call-centre or fraud-team audio"],
     [I.shield, "File the patent on the multi-specialist risk gateway"],
   ];
@@ -582,8 +651,8 @@ function fitImg(slide, file, pw, ph, x, y, w, h, o = {}) {
   card(s, 0.6, 6.15, 12.1, 0.6, { fill: HEX.lt2 });
   text(s, "No detector is perfect. DeepShield's value is that it knows when it is unsure and asks a human.", 0.8, 6.15, 11.7, 0.6, { fontSize: 15, italic: true, valign: "middle" });
   s.addNotes(
-    "To be transparent about the limits: brand-new AI tools still get through more often than we'd like, heavy noise hurts accuracy, very short clips can't be judged, and we haven't yet tested edited real recordings. " +
-    "Next steps are to keep adding new AI tools and varied voices, learn from reviewers' decisions, pilot on real call-centre audio, and file the patent on the risk gateway. " +
+    "To be transparent about the limits: brand-new AI tools still get through more often than we'd like, heavy noise hurts accuracy, very short clips can't be judged, and spliced recordings fool the AI on its own; the reference bank caught our test case, but that is one example. " +
+    "Next steps: run the retraining, which is ready; retune the add-ons on our own audio and test the speaker check with recordings from separate calls; pilot on real call-centre audio; and file the patent on the risk gateway. " +
     "The key message: no detector is perfect, but DeepShield knows when it's unsure and asks a person."
   );
 
@@ -603,7 +672,7 @@ function fitImg(slide, file, pw, ph, x, y, w, h, o = {}) {
     return [head, ...rows.map((r) => r.map((t, j) => ({ text: t, options: { fontSize: 13, fontFace: THEME.bodyFontFace, color: HEX.dk1, bold: j === 0, fill: { color: j === 0 ? HEX.lt2 : "FFFFFF" } } })))];
   };
   s = pres.addSlide({ masterName: "CONTENT", sectionTitle: "Appendix" });
-  s.addText("Cheat sheet: the models and why (1 of 2)", { placeholder: "title" });
+  s.addText("Cheat sheet: the models and why (1 of 3)", { placeholder: "title" });
   s.addTable(table([
     ["Prepare", "16 kHz audio, 3-second windows; training with MP3, noise, echo and phone-line effects", "Real calls are compressed and noisy", "Practise in the rain before match day"],
     ["Two views", "Mel spectrogram + MFCC, stacked as two channels", "One shows machine artefacts, the other the human voice shape", "Banknote under normal light and UV"],
@@ -614,7 +683,7 @@ function fitImg(slide, file, pw, ph, x, y, w, h, o = {}) {
   s.addNotes("Reference table: each building block, the technique used, why it was chosen, and a plain-English comparison. Use it if someone asks a technical question.");
 
   s = pres.addSlide({ masterName: "CONTENT", sectionTitle: "Appendix" });
-  s.addText("Cheat sheet: the models and why (2 of 2)", { placeholder: "title" });
+  s.addText("Cheat sheet: the models and why (2 of 3)", { placeholder: "title" });
   s.addTable(table([
     ["Fake score", "Classifier head (real vs AI)", "The core detection signal", "The main verdict"],
     ["Attack type", "5-way classifier head trained jointly", "Tells investigators what made the fake", "Which forger’s style"],
@@ -624,6 +693,17 @@ function fitImg(slide, file, pw, ph, x, y, w, h, o = {}) {
     ["Explanation", "Template-based sentence from the actual scores", "Never invents a reason", "A short written verdict"],
   ]), { x: 0.6, y: 1.4, w: 12.1, colW: [1.9, 4.0, 3.5, 2.7], border: { type: "solid", pt: 0.75, color: "CBD5E1" }, valign: "middle", rowH: 0.74 });
   s.addNotes("Second half of the reference table, covering the four specialists, the risk gateway and the explanation.");
+
+  s = pres.addSlide({ masterName: "CONTENT", sectionTitle: "Appendix" });
+  s.addText("Cheat sheet: what was added in October (3 of 3)", { placeholder: "title" });
+  s.addTable(table([
+    ["Overlapping windows", "3-second windows every 0.5 s; clip score = mean of the most suspicious third", "No gaps where a fake can hide", "Reading every line, not every tenth"],
+    ["Fixed-seed uncertainty", "The 20 repeated passes use the same random settings every time", "Same file, same decision", "Asking the same panel each time"],
+    ["Reference bank", "Logistic layer on the 128-number fingerprint, tuned on labelled clips", `Real-world accuracy ${P(A.cv_by_speaker.detector.accuracy)} → ${P(A.cv_by_speaker.reference_bank.accuracy)} on new speakers`, "Local knowledge for an expert"],
+    ["Speaker check", "Distance to 3–5 verified recordings of the claimed speaker, combined with the fake score", `Fakes let through ${P(A.cv_by_speaker.detector_same_clips_as_speaker_check.fakes_passed)} → ${P(A.cv_by_speaker.speaker_check_5_enrolled.fakes_passed)}`, "Comparing with known photos of the person"],
+    ["Round-3 retraining", "Random crops, spliced fakes, 3-model ensemble; ready to run", "Expected to be the biggest accuracy gain", "Further training for the expert"],
+  ]), { x: 0.6, y: 1.4, w: 12.1, colW: [1.9, 4.0, 3.5, 2.7], border: { type: "solid", pt: 0.75, color: "CBD5E1" }, valign: "middle", rowH: 0.82 });
+  s.addNotes("Reference table for the October additions: overlapping windows, fixed-seed uncertainty, the reference bank, the speaker check, and the prepared retraining.");
 
   await pres.writeFile({ fileName: OUT });
   await applyTheme(OUT, THEME);

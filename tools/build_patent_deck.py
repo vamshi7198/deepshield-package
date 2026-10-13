@@ -21,7 +21,7 @@ from pptx.util import Inches, Pt
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TEMPLATE = os.path.join(ROOT, "DeepSheild_Templete_IP_PreDOI Doc Updated Revised V0.3 09.2026 (1).pptx")
-OUT = os.path.join(ROOT, "deliverables", "DeepShield_Patent_PreDOI_v1.0.pptx")
+OUT = os.path.join(ROOT, "deliverables", "DeepShield_Patent_PreDOI_v2.0.pptx")
 SCREENS = os.path.join(ROOT, "deliverables", "_work", "screens")
 FIGS = os.path.join(ROOT, "deliverables", "_work", "figs")
 R2 = os.path.join(ROOT, "eval", "runs", "round2", "deepshield_round2")
@@ -41,6 +41,9 @@ WHITE = RGBColor(0xFF, 0xFF, 0xFF)
 summary = json.load(open(os.path.join(R2, "summary.json"), encoding="utf-8"))
 matched = json.load(open(os.path.join(ROOT, "deliverables", "_work", "matched_review_comparison.json")))
 combined = json.load(open(os.path.join(ROOT, "deliverables", "_work", "combined_review_score.json")))
+# October 2026 laptop measurements: overlapping windows and the two add-ons (no retraining)
+RA = json.load(open(os.path.join(ROOT, "deliverables", "_work", "robustness_addons_results.json"), encoding="utf-8"))
+AD, WIN = RA["addons"], RA["windows"]
 
 prs = Presentation(TEMPLATE)
 LAYOUT = prs.slide_layouts[1]  # 제목 및 내용 (title and content), as used by every template slide
@@ -291,9 +294,10 @@ textbox(s, 8.35, 1.45, 4.55, 5.6, [
     ("##", [("What is new", "")]),
     [("The ", ""), ("combination", "r"), (": four heads computed from one shared embedding and ", ""), ("routed jointly", "r"), (" by a gateway calibrated to a human-review budget.", "")],
     ("##", [("Evidence so far (verified)", "")]),
-    [("A review lane at ~15% genuine workload halves both error types on never-seen generators. The heads' ", ""), ("extra", "b"), (" value over a score-only review rule is small but consistent (9 of 9 unseen families).", "")],
+    [("A review lane at ~15% genuine workload halves both error types on never-seen generators. The heads' ", ""), ("extra", "b"), (" value over a score-only review rule is small but consistent (9 of 9 unseen families). ", ""),
+     ("New (Oct 2026): ", "b"), (f"a claimed-speaker check on the same embedding lifts accuracy {pct(AD['cv_by_speaker']['detector_same_clips_as_speaker_check']['accuracy'])} → {pct(AD['cv_by_speaker']['speaker_check_5_enrolled']['accuracy'])} on unseen speakers, without retraining.", "")],
     ("##", [("Assessment", "")]),
-    [("Inventors proposed Class A1. ", ""), ("Current evidence supports a narrower combination claim; the inventive step is at risk", "r"), (" until the heads' contribution is shown more strongly (slides 22–23, 26).", "")],
+    [("Inventors proposed Class A1. ", ""), ("Current evidence supports a narrower combination claim; the inventive step is at risk", "r"), (" until the heads' contribution is shown at equal workload (round 3, ready to run). The speaker check is a new dependent-claim candidate; SASV prior art must be searched.", "")],
 ], size=12, space=3)
 
 # ============================================================================= 5. Significance
@@ -411,23 +415,32 @@ textbox(s, 5.75, 0.95, 7.3, 6.4, [
     [("A system comprising one or more processors and memory storing instructions that implement a feature module, the residual network, the four heads and ", ""), ("a gateway module configured to perform step (d) of claim 1", "r"), (".", "")],
 ], size=12, space=4)
 
-# ============================================================================= 11. Dependent claims
-s = new_slide("Dependent Claims")
-textbox(s, 7.6, 0.18, 5.5, 0.4, [[("Status in brackets: [E] implemented & evaluated · [C] code only · [P] proposed", "g")]], size=11)
+# ============================================================================= 11. Dependent claims (two slides)
 deps = [
     [("Claim 3: ", "b"), ("The method of claim 1, wherein the novelty score is a Mahalanobis distance from a Gaussian fitted on authentic-speech embeddings, with the threshold at a percentile (97.5th) of authentic training distances, ", ""), ("checked before any probability threshold", "r"), (". [E]", "")],
-    [("Claim 4: ", "b"), ("The method of claim 1, wherein the uncertainty estimate is the standard deviation of the spoof probability over N stochastic passes with dropout applied to the shared embedding and kept active at inference. [E]", "")],
+    [("Claim 4: ", "b"), ("The method of claim 1, wherein the uncertainty estimate is the standard deviation of the spoof probability over N stochastic passes with dropout applied to the shared embedding and kept active at inference, the dropout masks being drawn from a fixed seed so that the same input always receives the same route. [E]", "")],
     [("Claim 5: ", "b"), ("The method of claim 1, wherein ", ""), ("the uncertainty threshold is calibrated on held-out validation data so that at most a target fraction (e.g. 15%) of authentic inputs is routed to human review", "r"), (". [E]", "")],
-    [("Claim 6: ", "b"), ("The method of claim 1, wherein ", ""), ("the routing uses a combined risk score: a weighted combination of the spoof-probability margin, the uncertainty estimate and the novelty score, with the weights fitted on validation data", "r"), (". [C: preliminary analysis, slide 23]", "")],
-    [("Claim 7: ", "b"), ("The method of claim 1, wherein a long recording is scanned in several windows, the decision is based on the most suspicious window, and its time offset is reported to the reviewer. [E]", "")],
+    [("Claim 6: ", "b"), ("The method of claim 1, wherein ", ""), ("the routing uses a combined risk score: a weighted combination of the spoof-probability margin, the uncertainty estimate and the novelty score, with the weights fitted on validation data", "r"), (". [C: implemented in the demo for retrained models; equal-workload evaluation built into round 3, not yet run]", "")],
+    [("Claim 7: ", "b"), ("The method of claim 1, wherein the audio is scanned in overlapping windows at a fixed hop (0.5 s), the spoof probability of the recording is the mean of the most suspicious fraction (one third) of window probabilities, and the time offset of the most suspicious window is reported to the reviewer. [E: laptop, 800 In-the-Wild clips; the round-2 evaluation itself scored the first 3 s]", "")],
     [("Claim 8: ", "b"), ("The method of claim 1, wherein ", ""), ("audio shorter than a minimum duration (e.g. 2 s) is routed to human review", "r"), (" instead of receiving an automatic decision. [E: demo clips]", "")],
-    [("Claim 9: ", "b"), ("The method of claim 1, wherein the attack-family head classifies among real, vocoder artefact, TTS prosody, splice/edit and unknown-synthetic, trained jointly with the spoof head. [E, splice/edit class untrained]", "")],
+    [("Claim 9: ", "b"), ("The method of claim 1, wherein the attack-family head classifies among real, vocoder artefact, TTS prosody, splice/edit and unknown-synthetic, trained jointly with the spoof head. [E; splice/edit trained only in round 3, not yet run]", "")],
+]
+deps2 = [
     [("Claim 10: ", "b"), ("The method of claim 1, wherein the explanation is a deterministic template assembled from the head outputs, never generated free-form. [E]", "")],
     [("Claim 11: ", "b"), ("The method of claim 1, further comprising ", ""), ("per-channel activation maps computed separately for the Mel and MFCC channels, whose disagreement map is shown to the reviewer", "r"), (". [C]", "")],
     [("Claim 12: ", "b"), ("The method of claim 1, further comprising training with randomised MP3 re-encoding, additive noise at controlled SNR, reverberation and 8 kHz band-limiting. [E]", "")],
     [("Claim 13: ", "b"), ("The method of claim 1, further comprising queuing reviewer-confirmed and high-novelty samples for periodic fine-tuning with versioned model releases. [P]", "")],
+    [("Claim 14: ", "b"), ("The method of claim 1, wherein ", ""), ("a claimed identity accompanies the audio, and the distance between the recording's shared embedding and stored embeddings of verified genuine recordings of that identity is fused with the spoof probability before routing", "r"),
+     (f", without a separate speaker-recognition model. [E: unseen speakers {pct(AD['cv_by_speaker']['detector_same_clips_as_speaker_check']['accuracy'])} → {pct(AD['cv_by_speaker']['speaker_check_5_enrolled']['accuracy'])}; enrolled and test clips may share recording sessions]", "")],
+    [("Claim 15: ", "b"), ("The method of claim 1, wherein the spoof probability is replaced by the output of a linear layer applied to the frozen shared embedding and fitted on labelled recordings from the deployment domain, adapting the screen to that domain without retraining the network. ", ""),
+     (f"[E: unseen speakers {pct(AD['cv_by_speaker']['detector']['accuracy'])} → {pct(AD['cv_by_speaker']['reference_bank']['accuracy'])}; likely not inventive alone]", "")],
 ]
-textbox(s, 0.35, 0.85, 12.65, 6.5, deps, size=12, space=5)
+s = new_slide("Dependent Claims (1 of 2)")
+textbox(s, 7.6, 0.18, 5.5, 0.4, [[("Status in brackets: [E] implemented & evaluated · [C] code only · [P] proposed", "g")]], size=11)
+textbox(s, 0.35, 0.85, 12.65, 6.5, deps, size=13, space=7)
+s = new_slide("Dependent Claims (2 of 2)")
+textbox(s, 7.6, 0.18, 5.5, 0.4, [[("Status in brackets: [E] implemented & evaluated · [C] code only · [P] proposed", "g")]], size=11)
+textbox(s, 0.35, 0.85, 12.65, 6.5, deps2, size=13, space=7)
 
 # ============================================================================= 12. Main patentable points (ranked, with evidence)
 s = new_slide("Main Patentable Points (ranked by evidence)")
@@ -439,8 +452,10 @@ table(s, 0.3, 0.95, 12.7, [0.4, 4.6, 5.6, 2.1], [
     ["3", [("Genuine-only novelty boundary checked first", "r")], "No signal on seen generators (AUC 0.55); real signal on unseen ones (0.60–0.78). Flags 0–31% of unseen fakes at the current threshold.", [("Moderate–weak", "rb")]],
     ["4", "Attack-family attribution trained jointly with detection", "91.0% correct on test fakes; classes are coarse and the splice/edit class has no training data.", [("Moderate", "b")]],
     ["5", [("Per-channel (Mel vs MFCC) disagreement explanation", "r")], "Code exists; never evaluated or shown to users.", [("None yet", "rb")]],
-], size=12, row_h=0.9)
-textbox(s, 0.35, 6.75, 12.6, 0.6, [[("Recommendation to the patent team: ", "b"), ("lead with point 1 as a combination claim and support it with point 2. Points 3 and 5 need the experiments on slide 26 before they can carry weight.", "")]], size=13)
+    ["6", [("Claimed-speaker distance on the detector's own embedding, fused into routing (claim 14)", "r")], f"Unseen speakers: accuracy {pct(AD['cv_by_speaker']['detector_same_clips_as_speaker_check']['accuracy'])} → {pct(AD['cv_by_speaker']['speaker_check_5_enrolled']['accuracy'])}, fakes passed {pct(AD['cv_by_speaker']['detector_same_clips_as_speaker_check']['fakes_passed'])} → {pct(AD['cv_by_speaker']['speaker_check_5_enrolled']['fakes_passed'])}. Close prior art: SASV 2022. Session overlap not yet ruled out.", [("Moderate (pending)", "b")]],
+    ["7", "Domain reference bank on the frozen embedding (claim 15)", f"Unseen speakers: {pct(AD['cv_by_speaker']['detector']['accuracy'])} → {pct(AD['cv_by_speaker']['reference_bank']['accuracy'])}. Large practical gain, but a linear probe on frozen features is standard practice.", [("Weak (as a claim)", "rb")]],
+], size=12, row_h=0.72)
+textbox(s, 0.35, 6.75, 12.6, 0.6, [[("Recommendation to the patent team: ", "b"), ("lead with point 1 as a combination claim and support it with point 2; add point 6 as a dependent claim after a SASV prior-art search. Points 3 and 5 need the experiments on the limitations slide.", "")]], size=13)
 
 # ============================================================================= 13. Novelty map
 s = new_slide("Novelty Map: what is new, and why")
@@ -452,9 +467,11 @@ table(s, 0.3, 0.95, 12.7, [3.1, 4.2, 1.6, 3.8], [
     ["MC-dropout uncertainty", "Gal & Ghahramani, 2016", "No (alone)", "Known estimator; new in how it drives routing"],
     ["Mahalanobis novelty score", "Lee et al., 2018 (out-of-distribution detection)", "No (alone)", "Known; new in being fitted on authentic speech only and checked first in routing"],
     ["Human-review lane / reject option", "Selective classification (Geifman & El-Yaniv, 2017)", "No (alone)", "Known; DeepShield sets it by a review budget"],
-    [[("Four heads on one shared embedding + jointly routed gateway", "r")], "No single reference combining all four signals in one routing function (per inventors’ search)", [("Candidate", "rb")], "Integrated combination; effect modest so far (slides 22–23)"],
+    [[("Four heads on one shared embedding + jointly routed gateway", "r")], "No single reference combining all four signals in one routing function (per inventors’ search)", [("Candidate", "rb")], "Integrated combination; effect modest so far (see Technical Effect)"],
     [[("Per-channel disagreement explanation", "r")], "Grad-CAM (Selvaraju et al., 2017) applied per input channel", [("Candidate", "rb")], "Specific to the two-channel design; not yet evaluated"],
-], size=12, row_h=0.62)
+    [[("Claimed-speaker check on the shared embedding", "r")], "Spoofing-aware speaker verification (SASV 2022): fuses a speaker-verification score with a countermeasure score", [("Candidate (narrow)", "rb")], "No separate speaker model; distance feeds the review gateway"],
+    ["Domain reference bank", "Linear probing / domain adaptation on frozen features", "No", "Standard technique; valuable in practice"],
+], size=11, row_h=0.5)
 textbox(s, 0.35, 6.7, 12.6, 0.6, [[("Academic references are well-known papers named for orientation; a formal prior-art search is still required.", "g")]], size=11)
 
 # ============================================================================= 14. Prior art comparison
@@ -467,7 +484,8 @@ table(s, 0.3, 0.95, 12.7, [5.0, 7.7], [
     ["Closed-set generator classifiers (ASVspoof 2019 LA challenge systems)", "DeepShield adds a novelty score fitted on authentic speech only and an Unknown-pattern route"],
     ["Selective classification / reject option (Geifman & El-Yaniv, 2017)", "DeepShield’s review decision uses head signals beyond the classifier’s own confidence"],
     ["Generic Grad-CAM / SHAP saliency (Selvaraju et al., 2017; Lundberg & Lee, 2017)", "DeepShield adds a deterministic rationale and proposes a Mel-vs-MFCC disagreement map"],
-], size=13, row_h=0.9)
+    ["Spoofing-aware speaker verification (SASV 2022 challenge systems)", "DeepShield measures the claimed-speaker distance on the detector's own embedding (no speaker-recognition model) and feeds it into the budgeted review gateway"],
+], size=13, row_h=0.78)
 textbox(s, 0.35, 6.55, 12.6, 0.7, [[("* Patent numbers as cited in the inventors’ draft; not independently verified. To be confirmed by the patent team’s search.", "r")]], size=12)
 
 # ============================================================================= 15. Difference from closest prior art
@@ -493,7 +511,7 @@ slides["System Architecture"] = s
 # ============================================================================= 17. End-to-end pipeline
 s = new_slide("6. Systems and Methods: End-to-End Pipeline")
 legend(s)
-row1 = [("Audio input", "any format → 16 kHz"), ("Windowing", "3-s windows, up to 12 per clip"), ("Augmentation", "training only"), ("Dual-channel grid", "Mel + MFCC, 2×64×94"), ("Residual CNN + SE", "341K parameters"), ("Shared embedding", "128-d")]
+row1 = [("Audio input", "any format → 16 kHz"), ("Windowing", "3-s windows every 0.5 s"), ("Augmentation", "training only"), ("Dual-channel grid", "Mel + MFCC, 2×64×94"), ("Residual CNN + SE", "341K parameters"), ("Shared embedding", "128-d")]
 xw, xg, y1 = 1.85, 0.27, 1.25
 for k, (t, sub) in enumerate(row1):
     x = 0.35 + k * (xw + xg)
@@ -525,7 +543,7 @@ label_box(s, 9.45, 4.45, 3.5, 0.95, "Explanation layer", "rationale (+ per-chann
 arrow(s, 8.75, 4.92, 9.45, 4.92)
 label_box(s, 10.75, 5.95, 2.2, 0.6, "Continual learning", "proposed", proposed=True, size=11)
 arrow(s, 11.85, 5.4, 11.85, 5.95)
-textbox(s, 0.35, 6.75, 12.6, 0.55, [[("Each window is scored; the most suspicious window drives the decision and its offset is shown to the reviewer. *Code exists, not evaluated.", "g")]], size=11)
+textbox(s, 0.35, 6.75, 12.6, 0.55, [[("Overlapping windows (0.5 s hop) are scored; the clip score is the mean of the most suspicious third, and the most suspicious window's offset is shown to the reviewer. *Code exists, not evaluated.", "g")]], size=11)
 
 # ============================================================================= 18. Gateway decision logic
 s = new_slide("6. Systems and Methods: Gateway Decision Logic")
@@ -562,23 +580,38 @@ textbox(s, 11.7, 1.15, 1.45, 5.6, [[("Thresholds as deployed in the demo (round-
 s = new_slide("6. Each Module Description: Supporting Front End (Stages 1–5)")
 table(s, 0.3, 0.95, 12.7, [2.6, 6.3, 3.8], [
     ["Stage", "Implementation", "Purpose"],
-    ["1 Audio input & windowing", "Decode any format to mono 16 kHz; 3-s windows (zero-padded if shorter); long clips scanned in up to 12 windows over the first 60 s", "One standard input; long recordings fully covered"],
+    ["1 Audio input & windowing", "Decode any format to mono 16 kHz; 3-s windows every 0.5 s (zero-padded if shorter), up to 120 over the first 60 s; clip score = mean of the most suspicious third", "One standard input; long recordings fully covered"],
     ["2 Robustness augmentation", "Training only: random MP3 (32/64/128 kbps), Gaussian noise at 0/10/20 dB SNR, synthetic room response, 8 kHz band-limiting, or none", "Survive compression, noise, reverberation and telephone audio"],
     ["3 Dual-channel features", "Log-power Mel spectrogram (64 bands, n_fft 1024, hop 512) and 64 MFCCs stacked → 2 × 64 × 94", "Artefact view + vocal-tract view in one input"],
     ["4 Backbone", "Conv 2→32; residual blocks 32→32, 32→64 (stride 2) + SE attention, 64→128 (stride 2); 341,254 parameters in total", "Proven, compact feature learner; CPU real-time"],
     ["5 Shared embedding", "Global average pool → 128-d vector feeding all heads and the novelty scorer", "One representation, consistent heads"],
 ], size=12, row_h=0.95)
-textbox(s, 0.35, 6.55, 12.6, 0.7, [[("These stages use established techniques (slide 13). They are the foundation the novel stages operate on.", "g")]], size=12)
+textbox(s, 0.35, 6.55, 12.6, 0.7, [[("These stages use established techniques (see Novelty Map). They are the foundation the novel stages operate on.", "g")]], size=12)
 
 s = new_slide("6. Each Module Description: Novel Stages (6–9)")
 legend(s)
 table(s, 0.3, 0.95, 12.7, [2.6, 6.3, 3.8], [
     ["Stage", "Implementation", "Why it matters"],
-    [[("6 Four parallel heads", "r")], "Spoof head (MLP, BCE loss); attack-type head (5 classes, cross-entropy, weight 0.4, trained jointly); uncertainty = std of P(fake) over N passes with dropout p = 0.35 on the embedding (N = 20 in evaluation, 10 in the demo); novelty = Mahalanobis distance to a Gaussian of genuine training embeddings", "Several independent views of the same evidence"],
+    [[("6 Four parallel heads", "r")], "Spoof head (MLP, BCE loss); attack-type head (5 classes, cross-entropy, weight 0.4, trained jointly); uncertainty = std of P(fake) over N passes with dropout p = 0.35 on the embedding (N = 20, fixed seed); novelty = Mahalanobis distance to a Gaussian of genuine training embeddings", "Several independent views of the same evidence"],
     [[("7 Risk-aware gateway", "r")], "Order: minimum duration → novelty → uncertainty → probability bands (0.30 / 0.70). Uncertainty threshold calibrated on validation for ≤15% genuine review (0.445 for the round-2 model)", "Doubtful cases go to people; workload is a parameter"],
     [[("8 Explanation layer", "r")], "Deterministic sentence from the head outputs (live). Per-channel Grad-CAM disagreement map (code only)", "Defensible, reproducible reasons"],
     ["9 Continual learning", "Reviewer-confirmed and high-novelty samples queued for periodic fine-tuning (not built)", "Keeps pace with new generators"],
 ], size=12, row_h=1.15)
+
+s = new_slide("6. Module Description: Add-ons (10–11)")
+slides["Add-ons"] = s
+legend(s)
+label_box(s, 0.6, 1.2, 2.6, 0.9, "Shared 128-d embedding", "mean over windows", size=12)
+label_box(s, 4.0, 1.0, 4.0, 1.3, "10  Claimed-speaker check", "distance to the closest of ≥3 enrolled genuine recordings (scaled L2 + cosine), fused with the spoof logit by a fitted logistic model", novel=True, size=12)
+label_box(s, 4.0, 2.55, 4.0, 1.1, "11  Domain reference bank", "logistic layer on the frozen embedding, fitted on labelled deployment audio", size=12)
+label_box(s, 8.8, 1.7, 3.6, 1.0, "Risk-aware gateway", "uses the fused / bank probability", novel=True, size=12)
+arrow(s, 3.2, 1.65, 4.0, 1.65); arrow(s, 3.2, 1.65, 4.0, 3.1)
+arrow(s, 8.0, 1.65, 8.8, 2.2); arrow(s, 8.0, 3.1, 8.8, 2.2)
+table(s, 0.3, 4.0, 12.7, [2.6, 6.3, 3.8], [
+    ["Stage", "Implementation", "Why it matters"],
+    [[("10 Claimed-speaker check", "r")], "POST /api/enroll stores verified genuine recordings per identity; a prediction with claimed_speaker computes the distance on the detector's own embedding and fuses it with the spoof logit (weights fitted on labelled clips; ≥3 enrolled clips required)", "Catches fakes of a known person that the detector alone passes; no extra model"],
+    ["11 Domain reference bank", "Standardise + logistic regression on the clip embedding, fitted on a few hundred labelled clips of the target audio; replaces the spoof probability; the detector's own score is still reported", "Adapts to a new audio domain without retraining"],
+], size=12, row_h=1.0)
 
 # ============================================================================= 21. Evaluation protocol
 s = new_slide("Evaluation Protocol")
@@ -592,7 +625,8 @@ table(s, 0.3, 0.95, 7.3, [2.3, 5.0], [
     ["Unseen generators", "Leave-one-family-out: 9 families held out of training and validation entirely"],
     ["External test", "In-the-Wild: 2,000 genuine + 2,000 deepfakes of public figures, never trained on"],
     ["Robustness", "1,000 test clips re-tested under 8 degradations"],
-], size=12, row_h=0.6)
+    ["Laptop checks (Oct 2026)", "800 further In-the-Wild clips (54 speakers, split by speaker) for windowing and add-ons; demo speakers held out"],
+], size=12, row_h=0.56)
 textbox(s, 7.85, 0.95, 5.2, 6.2, [
     ("##", "Why this protocol"),
     [("The students’ original 97.73% came from a random split in which ", ""), ("28%", "b"), (" of validation clips had a copy of the same recording or sentence in training. Under the grouped split the same model design scores ", ""), ("93.2%", "b"), (".", "")],
@@ -674,19 +708,64 @@ textbox(s, 8.75, 0.95, 4.3, 6.3, [
     "On familiar generators the heads add nothing over the score margin (0.853 vs 0.850).",
 ], size=12, space=6)
 
+# ============================================================================= 23b. Add-ons evidence
+s = new_slide("Technical Effect: Add-ons Without Retraining (Oct 2026)")
+cv = AD["cv_by_speaker"]
+cd = CategoryChartData()
+cd.categories = ["Unseen speakers (accuracy)", "Unseen speakers (EER)", "Demo speakers, held out (accuracy)"]
+cd.add_series("Detector alone", [round(100 * v, 1) for v in [cv["detector"]["accuracy"], cv["detector"]["eer"], AD["demo_speakers_held_out"]["detector"]["accuracy"]]])
+cd.add_series("Reference bank (claim 15)", [round(100 * v, 1) for v in [cv["reference_bank"]["accuracy"], cv["reference_bank"]["eer"], AD["demo_speakers_held_out"]["reference_bank"]["accuracy"]]])
+cd.add_series("Claimed-speaker check (claim 14)", [round(100 * v, 1) for v in [cv["speaker_check_5_enrolled"]["accuracy"], cv["speaker_check_5_enrolled"]["eer"], AD["demo_speakers_held_out"]["speaker_check"]["accuracy"]]])
+gf = s.shapes.add_chart(XL_CHART_TYPE.COLUMN_CLUSTERED, Inches(0.3), Inches(0.95), Inches(7.6), Inches(4.6), cd)
+ch = gf.chart
+ch.has_title = True
+ch.chart_title.text_frame.text = "In-the-Wild, speakers never used for fitting (%)"
+tp = ch.chart_title.text_frame.paragraphs[0]
+tp.runs[0].font.size, tp.runs[0].font.bold, tp.runs[0].font.name = Pt(14), True, FONT
+ch.has_legend = True
+ch.legend.position = XL_LEGEND_POSITION.BOTTOM
+ch.legend.include_in_layout = False
+ch.legend.font.size, ch.legend.font.name = Pt(11), FONT
+ch.value_axis.visible = False
+ch.value_axis.has_major_gridlines = False
+ch.value_axis.maximum_scale = 100
+ch.value_axis.minimum_scale = 0
+ch.category_axis.tick_labels.font.size = Pt(10)
+ch.category_axis.tick_labels.font.name = FONT
+for ser, col in zip(ch.plots[0].series, [RGBColor(0xA6, 0xA6, 0xA6), BLUE_LINE, RED]):
+    ser.format.fill.solid()
+    ser.format.fill.fore_color.rgb = col
+pl = ch.plots[0]
+pl.has_data_labels = True
+dl = pl.data_labels
+dl.number_format, dl.number_format_is_linked = '0.0"%"', False
+dl.position = XL_LABEL_POSITION.OUTSIDE_END
+dl.font.size, dl.font.name = Pt(10), FONT
+textbox(s, 8.15, 0.95, 4.9, 6.3, [
+    ("##", "Protocol"),
+    "Frozen round-2 model. 741 clips / 50 speakers, 2-fold cross-validation by speaker; the 4 demo speakers (39 clips) and the 24 demo clips never used for fitting. Speaker check: 5 enrolled genuine clips per speaker, scored on that speaker's other clips (479).",
+    ("##", "Finding"),
+    [("Both add-ons cut the error rate roughly in half on unseen speakers. ", ""), ("The speaker check trades errors: ", "b"), (f"fakes passed {pct(cv['detector_same_clips_as_speaker_check']['fakes_passed'])} → {pct(cv['speaker_check_5_enrolled']['fakes_passed'])}, genuine flagged {pct(cv['detector_same_clips_as_speaker_check']['genuine_flagged'])} → {pct(cv['speaker_check_5_enrolled']['genuine_flagged'])}.", "")],
+    ("##", "Caveats"),
+    ("-", "One source (In-the-Wild); enrolled and test clips may come from the same recording session"),
+    ("-", f"Overlapping windows alone: accuracy {pct(WIN['all_800']['old_accuracy'])} → {pct(WIN['all_800']['new_accuracy'])} (no real gain), but no blind spots and deterministic routes"),
+    ("-", "A perturbation-stability signal was tested and did not help at equal workload; not claimed"),
+], size=12, space=4)
+textbox(s, 0.35, 5.75, 7.5, 1.4, [[("Detector-alone accuracy on the speaker-check subset is " + pct(cv["detector_same_clips_as_speaker_check"]["accuracy"]) + " (the first group of bars uses all 741 clips for the detector and the bank). EER: lower is better.", "g")]], size=11)
+
 # ============================================================================= 24. Live inference examples
-s = new_slide("Sample Results: Live Inference (round-2 model, laptop CPU)")
+s = new_slide("Sample Results: Live Inference (laptop CPU)")
 slides["Sample Results"] = s
 cards = [
     ("result_genuine_pass_card.png", "Genuine (Mark Zuckerberg interview) → Stage 1 Pass", GREEN),
-    ("result_deepfake_block_card.png", "AI-generated (Barack Obama) → Stage 2 Block", RED),
-    ("result_review_uncertain_card.png", "AI-generated (Zuckerberg) → Stage 3 review, high uncertainty", AMBER),
+    ("result_deepfake_block_card.png", "AI-generated (Barack Obama) → Stage 2 Block, P = 0.95", RED),
+    ("result_review_uncertain_card.png", "AI-generated (Zuckerberg) → Stage 3 review, borderline P = 0.50", AMBER),
 ]
 for k, (f, cap, col) in enumerate(cards):
     x = 0.35 + k * 4.25
     picture(s, os.path.join(SCREENS, f), x + 0.25, 0.95, h=4.85)
     textbox(s, x, 5.9, 4.0, 0.7, [[(cap, "b")]], size=12, color=col, align=PP_ALIGN.CENTER)
-textbox(s, 0.35, 6.65, 12.6, 0.7, [[("Clips from the In-the-Wild dataset (never used in training). Each card shows the verdict, risk level, P(fake), uncertainty, attack-type distribution, novelty vs threshold, gateway route and the rationale.", "g")]], size=11)
+textbox(s, 0.35, 6.65, 12.6, 0.7, [[("Round-2 model with the reference bank; clips from the In-the-Wild dataset (never used in training or fitting). Each card shows the verdict, risk level, P(fake), uncertainty, attack-type distribution, novelty vs threshold, gateway route and the rationale.", "g")]], size=11)
 
 # ============================================================================= 25. Results summary table
 s = new_slide("Results Summary (round-2 model)")
@@ -723,19 +802,20 @@ textbox(s, 0.35, 0.95, 6.3, 6.3, [
     ("-", "Heavy noise: EER rises from 7% (clean) to 21% at 0 dB SNR"),
     ("-", "Clips under 2 s are unreliable; routed to review by design"),
     ("-", "LibriTTS genuine speech: 26% false alarms (other genuine sources 0.4–8%)"),
-    ("-", "Manipulated genuine audio (splicing, voice conversion) not tested; the splice/edit class has no training data"),
+    ("-", f"Partial deepfakes: 1.8 s of TTS spliced into genuine speech scores {AD['laptop_samples_14']['partial_deepfake_splice']['detector_p']:.2f} with the detector alone; the reference bank sends it to review ({AD['laptop_samples_14']['partial_deepfake_splice']['reference_bank_p']:.2f}). One example; voice conversion not tested"),
     ("##", "Not yet reduced to practice"),
     ("-", "Continual-learning loop (claim 13)"),
     ("-", "Per-channel disagreement explanation (claim 11): code only"),
-    ("-", "Combined risk-score routing (claim 6): offline analysis only"),
+    ("-", "Combined risk-score routing (claim 6): implemented, evaluation pending round 3"),
+    ("-", "Claimed-speaker check (claim 14): not yet tested with enrollment from separate sessions"),
 ], size=13, space=5)
 textbox(s, 6.85, 0.95, 6.2, 6.3, [
     ("##", "Experiments that would strengthen the filing"),
-    ("-", [("Replace the hand-written rules with the fitted combined risk score (claim 6), calibrated on validation; re-run leave-one-family-out. ", ""), ("No retraining, no architecture change.", "b")]),
-    ("-", "Report error rates at equal review workload against the score-only rule as the standard baseline"),
+    ("-", [("Run round 3 (built and smoke-tested): random crops, 3,000 spliced fakes, ensemble, and the ", ""), ("equal-workload comparison of the combined risk score against the score-only rule", "b"), (" on test, In-the-Wild and every unseen family", "")]),
+    ("-", "Speaker check with enrollment and test audio from different sessions"),
     ("-", "Evaluate the per-channel disagreement map with reviewers, or drop claim 11"),
     ("-", "Add a voice-conversion / splicing test set to support the attack-type claim"),
-    ("-", "Formal prior-art search, especially selective classification combined with OOD detection for anti-spoofing"),
+    ("-", "Formal prior-art search: selective classification + OOD detection for anti-spoofing, and SASV (claim 14)"),
     ("##", "Bottom line for the patent team"),
     [("The integrated system is built and works; ", ""), ("the inventive step currently rests on a modest measured effect", "r"), (". Filing is defensible as a combination claim, but the experiments above should come first if time allows.", "")],
 ], size=13, space=5)
@@ -744,11 +824,12 @@ textbox(s, 6.85, 0.95, 6.2, 6.3, [
 toc_items = [
     ("Recommendation Summary", "Recommendation Summary"),
     ("Opportunity Review (significance, current solutions, proposed engine, why it works)", "Opportunity Review"),
-    ("Independent and Dependent Claims", "Independent Claims"),
+    ("Independent and Dependent Claims (incl. new claims 14–15)", "Independent Claims"),
     ("Main Patentable Points (ranked by evidence)", "Main Patentable Points"),
     ("Novelty Map", "Novelty Map"),
     ("Prior Art Comparison and Difference from Closest Prior Art", "Prior Art Comparison"),
     ("System Architecture & Module Description", "System Architecture"),
+    ("Inference-time Add-ons (module description)", "Add-ons"),
     ("Evaluation Protocol", "Evaluation"),
     ("Technical Effect (evidence)", "Technical Effect"),
     ("Sample Results and Results Summary", "Sample Results"),
@@ -762,6 +843,6 @@ num = {name: prs.slides.index(sl) + 1 for name, sl in slides.items()}
 rows = [["Title", "Slide No."]] + [[t, f"Slide {num[k]}"] for t, k in toc_items]
 table(toc, 0.5, 1.0, 12.3, [10.3, 2.0], rows, size=14, row_h=0.45)
 
-prs.core_properties.title = "DeepShield IP Pre-DOI v1.0"
+prs.core_properties.title = "DeepShield IP Pre-DOI v2.0"
 prs.save(OUT)
 print("wrote", OUT, "slides:", len(prs.slides))
